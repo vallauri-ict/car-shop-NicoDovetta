@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarShopConsoleProject", "CarShopConsoleProject\CarShopConsoleProject.csproj", "{D65B9B71-03C0-4C21-B3EA-0399ABA92348}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "database_instruction", "database_instruction\database_instruction.csproj", "{15A89497-1544-4FD0-B92E-207644B633DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{D65B9B71-03C0-4C21-B3EA-0399ABA92348}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D65B9B71-03C0-4C21-B3EA-0399ABA92348}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D65B9B71-03C0-4C21-B3EA-0399ABA92348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15A89497-1544-4FD0-B92E-207644B633DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15A89497-1544-4FD0-B92E-207644B633DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15A89497-1544-4FD0-B92E-207644B633DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15A89497-1544-4FD0-B92E-207644B633DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
