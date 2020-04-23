@@ -57,17 +57,7 @@ namespace database_instruction
                         return;
                     }
 
-                    List<Car> lstM = new List<Car>();
-                    lstM.Add(new Car("Audi", 52642));
-                    lstM.Add(new Car("Mercedes", 57127));
-                    lstM.Add(new Car("Skoda", 9000));
-                    lstM.Add(new Car("Volvo", 29000));
-                    lstM.Add(new Car("Bentley", 350000));
-                    lstM.Add(new Car("Citroen", 21000));
-                    lstM.Add(new Car("Hummer", 41400));
-                    lstM.Add(new Car("Volkswagen", 21600));
-
-                    AddNewCar(lstM, tableName);
+                    loadTestData(tableName);
 
                     Console.WriteLine($"\nTable \"{tableName}\" created with test data!");
                     System.Threading.Thread.Sleep(3000);
@@ -204,6 +194,21 @@ namespace database_instruction
                 Console.WriteLine($"\nCars from \"{tableName}\" listed!");
                 System.Threading.Thread.Sleep(5000);
             }
+        }
+
+
+        private static void loadTestData(string tableName = "cars")
+        {
+            List<Car> lstM = new List<Car>();
+            lstM.Add(new Car("Audi", 52642));
+            lstM.Add(new Car("Mercedes", 57127));
+            lstM.Add(new Car("Skoda", 9000));
+            lstM.Add(new Car("Volvo", 29000));
+            lstM.Add(new Car("Bentley", 350000));
+            lstM.Add(new Car("Citroen", 21000));
+            lstM.Add(new Car("Hummer", 41400));
+            lstM.Add(new Car("Volkswagen", 21600));
+            AddNewCar(lstM, tableName);
         }
     }
 }
