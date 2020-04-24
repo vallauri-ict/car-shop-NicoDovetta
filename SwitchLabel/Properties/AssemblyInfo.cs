@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
-[assembly: AssemblyTitle("CarShopConsoleProject")]
+[assembly: AssemblyTitle("SwitchLabel")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CarShopConsoleProject")]
+[assembly: AssemblyProduct("SwitchLabel")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Se il progetto viene esposto a COM, il GUID seguente verrà utilizzato come ID della libreria dei tipi
-[assembly: Guid("d65b9b71-03c0-4c21-b3ea-0399aba92348")]
+[assembly: Guid("64651b7f-e0bd-4305-9f8a-1d4ace55bff6")]
 
 // Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
 //
