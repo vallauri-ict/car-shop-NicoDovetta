@@ -28,6 +28,10 @@ namespace database_instruction
     {
         private static string connStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=CarShop.accdb";
 
+        /// <summary>
+        /// Crea una tabella con un nome passato come parametro.
+        /// </summary>
+        /// <param name="tableName">Nome che verra assegnato alla tabella creata. Se non gli passo niente la tabella di base è "cars".</param>
         public static void CreateTableCars(string tableName = "cars")
         {
             if (connStr != null)
@@ -65,6 +69,10 @@ namespace database_instruction
             }
         }
 
+        /// <summary>
+        /// Cancella la tabella
+        /// </summary>
+        /// <param name="tableName">Nome della tabella da cancellare. Deafault "cars".</param>
         public static void DropTable(string tableName = "cars")
         {
             if (connStr != null)
@@ -94,6 +102,11 @@ namespace database_instruction
             }
         }
 
+        /// <summary>
+        /// Aggiunge un insieme di macchine a una tabella specifica.
+        /// </summary>
+        /// <param name="lstM">Lista di oggetti della classe macchine.</param>
+        /// <param name="tableName">Nome della tabella a cui aggiungere la lista di macchine. Default "cars".</param>
         public static void AddNewCar(List<Car> lstM, string tableName = "cars")
         {
             foreach (Car c in lstM)
@@ -102,6 +115,10 @@ namespace database_instruction
             }
         }
 
+        /// <summary>
+        /// Aggiunge una macchina per volta tramite inserimento sulla cli.
+        /// </summary>
+        /// <param name="tableName">Nome della tabella a cui aggiungere la macchina. Default "cars".</param>
         public static void AddNewCar(string tableName = "cars")
         {
             string n = "";
@@ -121,6 +138,13 @@ namespace database_instruction
             }
         }
 
+        /// <summary>
+        /// Aggiunge realmente, tramite query, le macchine al database. Viene richiamato da entrambi i metodi AddNewCar.
+        /// </summary>
+        /// <param name="carName">Nome della macchina da aggiungere.</param>
+        /// <param name="carPrice">Prezzo della macchina da aggiungere.</param>
+        /// <param name="msg">Messaggio da dare alla fine dell'aggiunta delle macchine.</param>
+        /// <param name="tableName">Nome della tabella a cui aggiungere le macchine. Default "cars".</param>
         private static void AddCar(string carName, int carPrice, string msg = "", string tableName = "cars")
         {
             if (connStr != null)
@@ -154,6 +178,10 @@ namespace database_instruction
             }
         }
 
+        /// <summary>
+        /// Tramite una query prende tutti i dati di una tabella e gli visualizza su cli.
+        /// </summary>
+        /// <param name="tableName">Nome della tabella da listare. Default "cars".</param>
         public static void ListCars(string tableName = "cars")
         {
             if (connStr != null)
@@ -196,7 +224,10 @@ namespace database_instruction
             }
         }
 
-
+        /// <summary>
+        /// Carica dei dati di test dopo la creazione della tabella.
+        /// </summary>
+        /// <param name="tableName">Nome della tabella a cui aggiungere le macchine. Default "cars".</param>
         private static void loadTestData(string tableName = "cars")
         {
             List<Car> lstM = new List<Car>();
