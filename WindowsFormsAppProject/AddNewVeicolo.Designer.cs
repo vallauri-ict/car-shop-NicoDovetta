@@ -57,6 +57,10 @@
             this.btnAnnulla = new System.Windows.Forms.Button();
             this.btnAggiungi = new System.Windows.Forms.Button();
             this.btnImmagine = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtPrezzo = new System.Windows.Forms.TextBox();
+            this.txtTarga = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numKmPercorsi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAirbag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPotenza)).BeginInit();
@@ -377,7 +381,7 @@
             // 
             // btnAnnulla
             // 
-            this.btnAnnulla.Location = new System.Drawing.Point(12, 162);
+            this.btnAnnulla.Location = new System.Drawing.Point(12, 174);
             this.btnAnnulla.Name = "btnAnnulla";
             this.btnAnnulla.Size = new System.Drawing.Size(75, 23);
             this.btnAnnulla.TabIndex = 57;
@@ -387,7 +391,7 @@
             // 
             // btnAggiungi
             // 
-            this.btnAggiungi.Location = new System.Drawing.Point(97, 162);
+            this.btnAggiungi.Location = new System.Drawing.Point(97, 174);
             this.btnAggiungi.Name = "btnAggiungi";
             this.btnAggiungi.Size = new System.Drawing.Size(75, 23);
             this.btnAggiungi.TabIndex = 58;
@@ -405,11 +409,48 @@
             this.btnImmagine.UseVisualStyleBackColor = true;
             this.btnImmagine.Click += new System.EventHandler(this.btnImmagine_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(505, 123);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(42, 13);
+            this.label8.TabIndex = 60;
+            this.label8.Text = "Prezzo:";
+            // 
+            // txtPrezzo
+            // 
+            this.txtPrezzo.Location = new System.Drawing.Point(553, 120);
+            this.txtPrezzo.Name = "txtPrezzo";
+            this.txtPrezzo.Size = new System.Drawing.Size(111, 20);
+            this.txtPrezzo.TabIndex = 61;
+            this.txtPrezzo.TextChanged += new System.EventHandler(this.txtPrezzo_TextChanged);
+            // 
+            // txtTarga
+            // 
+            this.txtTarga.Location = new System.Drawing.Point(57, 148);
+            this.txtTarga.Name = "txtTarga";
+            this.txtTarga.Size = new System.Drawing.Size(111, 20);
+            this.txtTarga.TabIndex = 63;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(9, 151);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(38, 13);
+            this.label9.TabIndex = 62;
+            this.label9.Text = "Targa:";
+            // 
             // AddNewVeicolo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(676, 197);
+            this.ClientSize = new System.Drawing.Size(676, 205);
+            this.Controls.Add(this.txtTarga);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.txtPrezzo);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.btnImmagine);
             this.Controls.Add(this.btnAggiungi);
             this.Controls.Add(this.btnAnnulla);
@@ -481,5 +522,9 @@
         private System.Windows.Forms.Button btnAnnulla;
         private System.Windows.Forms.Button btnAggiungi;
         private System.Windows.Forms.Button btnImmagine;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtPrezzo;
+        private System.Windows.Forms.TextBox txtTarga;
+        private System.Windows.Forms.Label label9;
     }
 }

@@ -22,7 +22,7 @@ namespace veicoliDLLProject
         /// <summary>
         /// Crea dati di test, parametri assegnati staticamente.
         /// </summary>
-        public Moto() : base("Ducati", "Squalo", "Nero", 1000, 75.20, DateTime.Now, false, false, 0, @".\img/noPhoto.jpg")
+        public Moto() : base("", "Ducati", "Squalo", "Nero", 1000, 75.20, DateTime.Now, false, false, 0, 12358, @".\img/noPhoto.jpg")
         {
             this.MarcaSella = "Cavallino";
         }
@@ -31,8 +31,8 @@ namespace veicoliDLLProject
         /// Costruttore "vero" della classe Moto, i parametri sono assegnati dinamicamente.
         /// </summary>
         /// <param>Spiegati in Veicolo.cs</param>
-        public Moto(string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, int kmPercorsi, string marcaSella, string imgPath = @".\img/genericMoto.jpg" /*Path dell'immagine, se omesso dalla dichiarazione si prende l'immagine generale*/)
-            : base(marca, modello, colore, cilindrata, potenzaKw, immatricolazione, isUsato, isKmZero, kmPercorsi, imgPath)
+        public Moto(string targa, string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, string marcaSella, double prezzo, string imgPath = @".\img/genericMoto.jpg" /*Path dell'immagine, se omesso dalla dichiarazione si prende l'immagine generale*/)
+            : base(targa, marca, modello, colore, cilindrata, potenzaKw, immatricolazione, isUsato, isKmZero, kmPercorsi, prezzo, imgPath)
         {
             this.MarcaSella = marcaSella;
         }

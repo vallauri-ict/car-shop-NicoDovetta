@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppProject", "ConsoleApp1\ConsoleAppProject.csproj", "{7EB575F5-5A6C-4AF3-9D67-5AFA73F6D50E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "veicoliDLLProject", "veicoliDLL\veicoliDLLProject.csproj", "{17E8D269-CEE4-45B4-8A4B-F39ED97B8D72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsAppProject", "WindowsFormsAppProject\WindowsFormsAppProject.csproj", "{ACCAE2C5-5F77-49C2-B4F8-4325D2B88D9C}"
@@ -13,16 +11,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchTextBox", "SwitchText
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchLabel", "SwitchLabel\SwitchLabel.csproj", "{64651B7F-E0BD-4305-9F8A-1D4ACE55BFF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseInstruction", "DatabaseInstruction\DatabaseInstruction.csproj", "{65C8CCB0-23D4-4E40-8EAF-4E0ED699F37C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLI_Database", "CLI_Database\CLI_Database.csproj", "{C9E721AB-DD6E-4C08-934C-2C16557746AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7EB575F5-5A6C-4AF3-9D67-5AFA73F6D50E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7EB575F5-5A6C-4AF3-9D67-5AFA73F6D50E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7EB575F5-5A6C-4AF3-9D67-5AFA73F6D50E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7EB575F5-5A6C-4AF3-9D67-5AFA73F6D50E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17E8D269-CEE4-45B4-8A4B-F39ED97B8D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17E8D269-CEE4-45B4-8A4B-F39ED97B8D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17E8D269-CEE4-45B4-8A4B-F39ED97B8D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +37,14 @@ Global
 		{64651B7F-E0BD-4305-9F8A-1D4ACE55BFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64651B7F-E0BD-4305-9F8A-1D4ACE55BFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64651B7F-E0BD-4305-9F8A-1D4ACE55BFF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C8CCB0-23D4-4E40-8EAF-4E0ED699F37C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C8CCB0-23D4-4E40-8EAF-4E0ED699F37C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C8CCB0-23D4-4E40-8EAF-4E0ED699F37C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C8CCB0-23D4-4E40-8EAF-4E0ED699F37C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9E721AB-DD6E-4C08-934C-2C16557746AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9E721AB-DD6E-4C08-934C-2C16557746AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9E721AB-DD6E-4C08-934C-2C16557746AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9E721AB-DD6E-4C08-934C-2C16557746AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
