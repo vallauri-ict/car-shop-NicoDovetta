@@ -22,7 +22,7 @@ namespace veicoliDLLProject
         /// <summary>
         /// Usato solamente per creare dati di test, i dati sono statici.
         /// </summary>
-        public Automobili() : base("Mercedes", "GLX", "Nero", 2100, 175.20, DateTime.Now, false, false, 0, @".\img/noPhoto.jpg")
+        public Automobili() : base("", "Mercedes", "GLX", "Nero", 2100, 175.20, DateTime.Now, false, false, 0, 1235489, @".\img/noPhoto.jpg")
         {
             NumAirbag = 6;
         }
@@ -31,8 +31,8 @@ namespace veicoliDLLProject
         /// Costruttore "vero" della classe Automobili, i parametri sono caricati dinamicamente.
         /// </summary>
         /// <param>Spiegati in Veicolo.cs</param>
-        public Automobili(string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, int kmPercorsi, int numAirbag, string imgPath = @".\img/genericAuto.jpg" /*Path dell'immagine, se omesso dalla dichiarazione si prende l'immagine generale*/)
-            : base(marca, modello, colore, cilindrata, potenzaKw, immatricolazione, isUsato, isKmZero, kmPercorsi, imgPath)
+        public Automobili(string targa, string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, int numAirbag, double prezzo, string imgPath = @".\img/genericAuto.jpg" /*Path dell'immagine, se omesso dalla dichiarazione si prende l'immagine generale*/)
+            : base(targa, marca, modello, colore, cilindrata, potenzaKw, immatricolazione, isUsato, isKmZero, kmPercorsi, prezzo, imgPath)
         {
             this.NumAirbag = numAirbag;
         }

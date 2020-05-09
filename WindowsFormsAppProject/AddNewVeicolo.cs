@@ -2,6 +2,7 @@
 //Interni
 using System;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using veicoliDLLProject;
 
@@ -15,6 +16,7 @@ namespace WindowsFormsAppProject
     {
         private SerialBindList<Veicolo> listaVeicoli;//Riferimento alla lista "vera", contenente tutti i veicoli
         private KnownColor color = KnownColor.Black;//colore del veicolo scelto dall'utente
+        private string imgPath = @".\img/noPhoto.jpg";
 
         /// <summary>
         /// Costruttore vuoto
@@ -93,21 +95,70 @@ namespace WindowsFormsAppProject
         /// <param name="e"></param>
         private void btnAggiungi_Click(object sender, EventArgs e)
         {
-            if (cmbTipoVeicolo.SelectedIndex == 0)
+            string targa = txtTarga.Text;
+            if (checkTarga(ref targa))
             {
-                listaVeicoli.Add(new Moto(txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToInt32(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text));
+                if (cmbTipoVeicolo.SelectedIndex == 0)
+                {
+                    listaVeicoli.Add(new Moto("AA000AA", txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToInt32(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text, Convert.ToDouble(txtPrezzo.Text), imgPath));
+                }
+                else
+                {
+                    listaVeicoli.Add(new Automobili("AA000AA", txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToInt32(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), Convert.ToInt32(numAirbag.Value), Convert.ToDouble(txtPrezzo.Text), imgPath));
+                }
+                Close();
             }
             else
             {
-                listaVeicoli.Add(new Moto(txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToInt32(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text));
+                MessageBox.Show("Targa non valida. Se la macchina non è immatricolata lasciare libero il campo.");
             }
-            Close();
         }
 
+        /// <summary>
+        /// Tramite una regular expression controlla la targa
+        /// </summary>
+        /// <returns></returns>
+        private bool checkTarga(ref string targa)
+        {
+            Regex rgx = new Regex(@"[A - Za - z]{ 2}[0-9]{3}[A-Za-z]{2}");
+            if ((targa.Length == 7 && rgx.IsMatch(targa)) || targa == "")
+            {
+                if (targa == "")
+                {
+                    targa = Utils.makeTarga(listaVeicoli);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Apre una file dialog che permette di scegliere l'immagine
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnImmagine_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.ShowDialog();
+            imgPath = ofd.FileName;
+            if (!imgPath.Contains(".png") || !imgPath.Contains(".jpg") || !imgPath.Contains(".jpeg"))
+            {
+                MessageBox.Show("Estensioni accettate .png, .jpg, .jpeg.");
+                imgPath = @".\img/noPhoto.jpg";
+            }
+        }
+
+        private void txtPrezzo_TextChanged(object sender, EventArgs e)
+        {
+            double _;
+            if (!double.TryParse(txtPrezzo.Text, out _))
+            {
+                MessageBox.Show("Il prezzo deve essere un numero.");
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ namespace veicoliDLLProject
     public abstract class Veicolo
     {
         #region CommonVariables
+        private string targa; //Targa del veicolo (chiave primaria nel database)
         private string marca; //Marca del veicolo.
         private string modello; //Modello del veicolo.
         private string colore; //Colore del veicolo.
@@ -22,7 +23,8 @@ namespace veicoliDLLProject
         private DateTime immatricolazione; //Data di immatricolazione del veicolo.
         private bool isUsato; //True se il veicolo è usato, False se il veicolo è nuovo.
         private bool isKmZero; //True se il veicolo è Km0, False se è nuovo/usato.
-        private int kmPercorsi; //KmPercorsi se il veicolo non è nuovo indica il numero di kilometri che ha percorso.
+        private float kmPercorsi; //KmPercorsi se il veicolo non è nuovo indica il numero di kilometri che ha percorso.
+        private double prezzo; //Prezzo del veicolo
         private string imgPath = ""; //Se al veicolo si vuole aggiungere un'immagine singola e rappresentativa la si seleziona, altrimenti si aggiungerà un'immagine standard per ogni categoria di veicoli
         #endregion
 
@@ -30,8 +32,9 @@ namespace veicoliDLLProject
         /// Costruttore base della classe Veicolo, implementato in tutte le classi derivate come ":base()" dopo la dichiarazione dei parametri del costruttore.
         /// </summary>
         /// <param>Spiegati nella dichiarazione delle variabili</param>
-        protected Veicolo(string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, int kmPercorsi, string imgPath)
+        protected Veicolo(string targa, string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, double prezzo, string imgPath)
         {
+            this.Targa = targa;
             this.Marca = marca;
             this.Modello = modello;
             this.Colore = colore;
@@ -41,6 +44,7 @@ namespace veicoliDLLProject
             this.IsUsato = isUsato;
             this.IsKmZero = isKmZero;
             this.KmPercorsi = kmPercorsi;
+            this.Prezzo = prezzo;
             this.ImgPath = imgPath;
         }
 
@@ -48,6 +52,12 @@ namespace veicoliDLLProject
         /*
          * Elenco delle proprietà delle variabili elencate nella region/sezione Variables (riga 10)
          */
+
+        public string Targa
+        {
+            get => targa.ToUpper();
+            set => targa = value;
+        }
 
         public string Marca
         {
@@ -97,10 +107,16 @@ namespace veicoliDLLProject
             set => isKmZero = value;
         }
 
-        public int KmPercorsi
+        public float KmPercorsi
         {
             get => kmPercorsi;
             set => kmPercorsi = value;
+        }
+
+        public double Prezzo
+        {
+            get => prezzo;
+            set => prezzo = value;
         }
 
         public string ImgPath

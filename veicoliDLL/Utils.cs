@@ -28,11 +28,9 @@ namespace veicoliDLLProject
         /// <where>Main riga:35</where>
         public static void caricaDatiDiTest(SerialBindList<Veicolo> listaVeicoli)
         {
-            Moto m = new Moto();
+            Moto m = new Moto("1", "Honda", "Tsunami", "Rosso", 1000, 120, DateTime.Now, false, false, 0, "Quintino", 1035);
             listaVeicoli.Add(m);
-            m = new Moto("Honda", "Tsunami", "Rosso", 1000, 120, DateTime.Now, false, false, 0, "Quintino");
-            listaVeicoli.Add(m);
-            Automobili a = new Automobili("Jeep", "Compass", "Blue", 1600, 90, DateTime.Now, false, false, 0, 8);
+            Automobili a = new Automobili("2", "Jeep", "Compass", "Blue", 1600, 90, DateTime.Now, false, false, 0, 8, 1235);
             listaVeicoli.Add(a);
         }
 
@@ -152,6 +150,28 @@ namespace veicoliDLLProject
                     
                 }
             }
+        }
+
+        /// <summary>
+        /// Crea una targa che possa funzionare da id e non vada in errore
+        /// </summary>
+        /// <param name="listaVeicoli">Per selezionare l'ultima targa "non immatricolata"</param>
+        /// <returns></returns>
+        public static string makeTarga(SerialBindList<Veicolo> listaVeicoli)
+        {
+            int numTarga = 0;
+            foreach (Veicolo item in listaVeicoli)
+            {
+                if (item.Targa.Contains("exp"))
+                {
+                    int aus = Convert.ToInt32(item.Targa.Substring(2));
+                    if (aus > numTarga)
+                    {
+                        numTarga = aus;
+                    }
+                }
+            }
+            return $"exp{numTarga + 1}";
         }
 
         /// <summary>
