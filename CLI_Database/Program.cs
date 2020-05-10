@@ -1,6 +1,7 @@
 ﻿#region Riferimenti
 //Interni
 using System;
+using System.IO;
 using veicoliDLLProject;
 using DatabaseInstruction;
 
@@ -12,7 +13,9 @@ namespace ConsoleAppProject
 {
     class Program
     {
-        private static string connStr = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=autoSalone.accdb";
+        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";
+        private static string accessDbPath = Path.Combine(resourcesDirectoryPath, CLI_Database.Properties.Resources.DB_Name);
+        private static string connStr = $"Provider=Microsoft.Ace.Oledb.12.0;Data Source={accessDbPath};";
         private static UtilsDb u;
 
         /// <summary>
