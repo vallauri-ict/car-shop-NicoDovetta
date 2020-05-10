@@ -1,15 +1,34 @@
-﻿using System;
+﻿#region Riferimenti
+//Interni
+using System;
 using System.Data.OleDb;
+using veicoliDLLProject;
+
+//Esterni
+
+#endregion Riferimenti
 
 namespace DatabaseInstruction
 {
     public class UtilsDb
     {
-        private static string connStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=autoSalone.accdb";
+        private static string connStr;
+
+        /// <summary>
+        /// Viene usato un costruttore per evitare che 2 o più persone agiscano assieme sul database, dato che potrebbe portare a perdite o modifiche di dati indesiderate.
+        /// </summary>
+        /// <param name="conn">Stringa di connessione al database.</param>
+        public UtilsDb(string conn)
+        {
+            connStr = conn;
+        }
 
         #region createTable
 
-        public static void createTableCars()
+        /// <summary>
+        /// Crea la tabella "Automobili".
+        /// </summary>
+        public void createTableCars()
         {
             if (connStr != null)
             {
@@ -25,10 +44,10 @@ namespace DatabaseInstruction
                     {
                         cmd.CommandText = @"CREATE TABLE Automobili(Targa VARCHAR(255) identity(1,1) NOT NULL PRIMARY KEY," +
                             "Marca VARCHAR(255), Modello VARCHAR(255),"+
-                            "Colore VARCHAR(255), Cilindrata int,"+
-                            "Potenza decimal(10,5), Immatricolazione VARCHAR(255),"+
+                            "Colore VARCHAR(255), Cilindrata double,"+
+                            "Potenza double, Immatricolazione date,"+
                             "Usato bit, Km0 bit,"+
-                            "KmPercorsi decimal(10,5), NumAirbag int, Price decimal(10,5), ImgPath VARCHAR(255));";
+                            "KmPercorsi int, NumAirbag int, Prezzo double, ImgPath VARCHAR(255));";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
@@ -45,7 +64,10 @@ namespace DatabaseInstruction
             }
         }
 
-        public static void createTableMoto()
+        /// <summary>
+        /// Crea la tabella "Moto".
+        /// </summary>
+        public void createTableMoto()
         {
             if (connStr != null)
             {
@@ -61,10 +83,10 @@ namespace DatabaseInstruction
                     {
                         cmd.CommandText = @"CREATE TABLE Moto(Targa VARCHAR(255) identity(1,1) NOT NULL PRIMARY KEY," +
                             "Marca VARCHAR(255), Modello VARCHAR(255)," +
-                            "Colore VARCHAR(255), Cilindrata int," +
-                            "Potenza decimal, Immatricolazione VARCHAR(255)," +
+                            "Colore VARCHAR(255), Cilindrata double," +
+                            "Potenza double, Immatricolazione date," +
                             "Usato bit, Km0 bit," +
-                            "KmPercorsi decimal(10,5), MarcaSella VARCHAR(255), Price decimal(10,5), ImgPath varchar(255));";
+                            "KmPercorsi int, MarcaSella VARCHAR(255), Prezzo double, ImgPath varchar(255));";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
@@ -81,7 +103,10 @@ namespace DatabaseInstruction
             }
         }
 
-        public static void createTableReport()
+        /// <summary>
+        /// Crea la tabella "Report_Vendite".
+        /// </summary>
+        public void createTableReport()
         {
             if (connStr != null)
             {
@@ -95,12 +120,12 @@ namespace DatabaseInstruction
 
                     try
                     {
-                        cmd.CommandText = @"CREATE TABLE Report_Vendite(Targa VARCHAR(255) identity(1,1) NOT NULL PRIMARY KEY, isAuto bit," +
+                        cmd.CommandText = @"CREATE TABLE Report_Vendite(Targa VARCHAR(255) identity(1,1) NOT NULL PRIMARY KEY, Tipo VARCHAR(255)," +
                             "Marca VARCHAR(255), Modello VARCHAR(255)," +
-                            "Colore VARCHAR(255), Cilindrata int," +
-                            "Potenza decimal, Immatricolazione VARCHAR(255)," +
+                            "Colore VARCHAR(255), Cilindrata double," +
+                            "Potenza double, Immatricolazione VARCHAR(255)," +
                             "Usato bit, Km0 bit," +
-                            "KmPercorsi decimal(10,5), MarcaSella VARCHAR(255), NumAirbag int, Price decimal(10,5));";
+                            "KmPercorsi int, MarcaSella VARCHAR(255), NumAirbag int, Prezzo double);";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
@@ -119,7 +144,11 @@ namespace DatabaseInstruction
 
         #endregion createTable
 
-        public static void addNewVeicol(string[] param, string tableName)
+        /// <summary>
+        /// Aggiunge un veicolo automaticamente a una delle 2 tabelle (Moto o Automobili) a seconda del tipo del veicolo.
+        /// </summary>
+        /// <param name="v">Veicolo da aggiungere alla tabella del tipo rispettivo.</param>
+        public void addNewVeicol(Veicolo v)
         {
             if (connStr != null)
             {
@@ -127,50 +156,40 @@ namespace DatabaseInstruction
                 using (con)
                 {
                     con.Open();
-                    string query = "";
                     OleDbCommand cmd = new OleDbCommand();
                     cmd.Connection = con;
-                    if (tableName=="Moto")
+                    if (v is Moto)
                     {
-                        query = "INSERT INTO @table(Targa, Marca, Modello, Colore, Cilindrata, Potenza, Immatricolazione," +
-                            "Usato, Km0, KmPercorsi, NumAirbag, ImgPath) VALUES(@Targa, @Marca, @Modello, @Colore, @Cilindrata, @Potenza, @Immatricolazione," +
-                            "@Usato, @Km0, @KmPercorsi, @NumAirbag, @Price, @ImgPath)";
-                        cmd.Parameters.Add(new OleDbParameter("@name", OleDbType.VarChar, 255)).Value = param[10];
+                        cmd.CommandText = "INSERT INTO Moto(Targa, Marca, Modello, Colore, Cilindrata, Potenza, Immatricolazione, Usato, Km0, KmPercorsi, MarcaSella, Prezzo, ImgPath)" +
+                            " VALUES(@Targa, @Marca, @Modello, @Colore, @Cilindrata, @Potenza, @Immatricolazione, @Usato, @Km0, @KmPercorsi, @MarcaSella, @Prezzo, @ImgPath);";
                     }
                     else
                     {
-                        query = "INSERT INTO @table(Targa, Marca, Modello, Colore, Cilindrata, Potenza, Immatricolazione," +
-                            "Usato, Km0, KmPercorsi, MarcaSella, ImgPath) VALUES(@Targa, @Marca, @Modello, @Colore, @Cilindrata, @Potenza, @Immatricolazione," +
-                            "@Usato, @Km0, @KmPercorsi, @MarcaSella, @Price, @ImgPath)";
-                        cmd.Parameters.Add("@price", OleDbType.Integer).Value = param[10];
+                        cmd.CommandText = "INSERT INTO Automobili(Targa, Marca, Modello, Colore, Cilindrata, Potenza, Immatricolazione, Usato, Km0, KmPercorsi, NumAirbag, Prezzo, ImgPath)" +
+                            " VALUES(@Targa, @Marca, @Modello, @Colore, @Cilindrata, @Potenza, @Immatricolazione, @Usato, @Km0, @KmPercorsi, @NumAirbag, @Prezzo, @ImgPath);";
                     }
-                    cmd.CommandText = query;
 
-                    //Sostituzione dei parametri
-                    cmd.CommandText = cmd.CommandText.Replace("@table", tableName);
-                    cmd.Parameters.Add(new OleDbParameter("@Targa", OleDbType.VarChar, 255)).Value = param[0];
-                    cmd.Parameters.Add(new OleDbParameter("@Marca", OleDbType.VarChar, 255)).Value = param[1];
-                    cmd.Parameters.Add(new OleDbParameter("@Modello", OleDbType.VarChar, 255)).Value = param[2];
-                    cmd.Parameters.Add(new OleDbParameter("@Colore", OleDbType.VarChar, 255)).Value = param[3];
-                    cmd.Parameters.Add("@Cilindrata", OleDbType.Integer).Value = Convert.ToInt32(param[4]);
-                    cmd.Parameters.Add(new OleDbParameter("@Potenza", OleDbType.Decimal, 10)).Value = Convert.ToDecimal(param[5]);
-                    cmd.Parameters.Add(new OleDbParameter("@Immatricolazione", OleDbType.VarChar, 255)).Value = param[5];
-                    cmd.Parameters.Add("@Usato", OleDbType.Boolean).Value = Convert.ToBoolean(param[7]);
-                    cmd.Parameters.Add("@Km0", OleDbType.Boolean).Value = Convert.ToBoolean(param[8]);
-                    cmd.Parameters.Add(new OleDbParameter("@KmPercorsi", OleDbType.Decimal, 10)).Value = Convert.ToDecimal(param[9]);
-                    cmd.Parameters.Add(new OleDbParameter("@Price", OleDbType.Decimal, 10)).Value = Convert.ToDecimal(param[11]);
-                    if (param.Length < 13)
+                    //Sostituzione parametri
+                    cmd.Parameters.Add(new OleDbParameter("@Targa", OleDbType.VarChar, 255)).Value = v.Targa;
+                    cmd.Parameters.Add(new OleDbParameter("@Marca", OleDbType.VarChar, 255)).Value = v.Marca;
+                    cmd.Parameters.Add(new OleDbParameter("@Modello", OleDbType.VarChar, 255)).Value = v.Modello;
+                    cmd.Parameters.Add(new OleDbParameter("@Colore", OleDbType.VarChar, 255)).Value = v.Colore;
+                    cmd.Parameters.Add("@Cilindrata", OleDbType.Double).Value = v.Cilindrata;
+                    cmd.Parameters.Add("@Potenza", OleDbType.Double).Value = v.PotenzaKw;
+                    cmd.Parameters.Add("@Immatricolazione", OleDbType.Date).Value = v.Immatricolazione;
+                    cmd.Parameters.Add("@Usato", OleDbType.Boolean).Value = v.IsUsato;
+                    cmd.Parameters.Add("@Km0", OleDbType.Boolean).Value = v.IsKmZero;
+                    cmd.Parameters.Add("@KmPercorsi", OleDbType.Integer).Value = v.KmPercorsi;
+                    if (v is Moto)
                     {
-                        cmd.Parameters.Add(new OleDbParameter("@ImgPath", OleDbType.VarChar, 255)).Value = @".\img/noPhoto.jpg";
-                    }
-                    else if(param[12] == "" || param[12] == " " || param[12] == "\n")
-                    {
-                        cmd.Parameters.Add(new OleDbParameter("@ImgPath", OleDbType.VarChar, 255)).Value = @".\img/noPhoto.jpg";
+                        cmd.Parameters.Add(new OleDbParameter("@MarcaSella", OleDbType.VarChar, 255)).Value = (v as Moto).MarcaSella;
                     }
                     else
                     {
-                        cmd.Parameters.Add(new OleDbParameter("@ImgPath", OleDbType.VarChar, 255)).Value = param[11];
+                        cmd.Parameters.Add("@NumAirbag", OleDbType.Integer).Value = (v as Automobili).NumAirbag;
                     }
+                    cmd.Parameters.Add("@Prezzo", OleDbType.Double).Value = v.Prezzo;
+                    cmd.Parameters.Add(new OleDbParameter("@ImgPath", OleDbType.VarChar, 255)).Value = v.ImgPath;
 
                     cmd.Prepare();
 
@@ -180,31 +199,33 @@ namespace DatabaseInstruction
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n\n" + exc.Message);
-                        System.Threading.Thread.Sleep(3000);
+                        Console.WriteLine("\n" + exc.Message);
+                        System.Threading.Thread.Sleep(5000);
                         return;
                     }
+                    Console.WriteLine("\nVeicolo inserito correttamente.");
+                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }
 
         #region dropTable
 
-        public static void dropMoto()
+        public void dropMoto()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"DROP TABLE Moto";
             execDropTable(cmd, "Moto");
         }
 
-        public static void dropAutomobili()
+        public void dropAutomobili()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"DROP TABLE Automobili";
             execDropTable(cmd, "Automobili");
         }
 
-        public static void dropReport()
+        public void dropReport()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"DROP TABLE Report_Vendite";
@@ -242,26 +263,41 @@ namespace DatabaseInstruction
 
         #region listTable
 
-        public static void listReport()
+        /// <summary>
+        /// Imposta la query per prendere tutti i dati della tabella "Automobili" e richiama il metodo che si occupa di scrivere a video ciò che viene riportato.
+        /// </summary>
+        public void listMacchine()
         {
             OleDbCommand cmd = new OleDbCommand();
-            cmd.CommandText = @"SELECT * FROM Report_Vendite";
-            execListTable(cmd, "ReportVendite");
+            cmd.CommandText = @"SELECT * FROM Automobili";
+            execListTable(cmd, "Automobili");
         }
 
-        public static void listMoto()
+        /// <summary>
+        /// Imposta la query per prendere tutti i dati della tabella "Moto" e richiama il metodo che si occupa di scrivere a video ciò che viene riportato.
+        /// </summary>
+        public void listMoto()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"SELECT * FROM Moto";
             execListTable(cmd, "Moto");
         }
 
-        public static void listMacchine()
+        /// <summary>
+        /// Imposta la query per prendere tutti i dati della tabella "Report_Vendite" e richiama il metodo che si occupa di scrivere a video ciò che viene riportato.
+        /// </summary>
+        public void listReport()
         {
             OleDbCommand cmd = new OleDbCommand();
-            cmd.CommandText = @"SELECT * FROM Automobili";
+            cmd.CommandText = @"SELECT * FROM Report_Vendite";
+            execListTable(cmd, "ReportVendite");
         }
 
+        /// <summary>
+        /// Si occupa di visualizzare i record di una tabella eseguendo la query contenuta nel parametro cmd.
+        /// </summary>
+        /// <param name="cmd">Comando che contiene la query. Impostato in un metodo per ogni tabella per impedire la sql injection.</param>
+        /// <param name="tableName">Nome della tabella della quale si vogliono visualizzare i record.</param>
         private static void execListTable(OleDbCommand cmd, string tableName)
         {
             if (connStr != null)
@@ -274,10 +310,10 @@ namespace DatabaseInstruction
                     try
                     {
                         OleDbDataReader reader = cmd.ExecuteReader();
-
+                        Console.Clear();
                         while (reader.Read())
                         {
-                            Console.WriteLine(reader[0].ToString());
+                            Console.WriteLine(reader[0].ToString() + " " + reader[1].ToString() + " " + reader[2].ToString() + " " + reader[3].ToString() + " " + reader[4].ToString() + " " + reader[5].ToString() + " " + reader[6].ToString() + " " + reader[7].ToString() + " " + reader[8].ToString() + " " + reader[9].ToString() + " " + reader[10].ToString() + " " + reader[11].ToString() + " " + reader[12].ToString());
                         }
                         reader.Close();
                     }
@@ -288,8 +324,9 @@ namespace DatabaseInstruction
                         return;
                     }
                 }
-                Console.WriteLine($"\nCars from \"{tableName}\" listed!");
-                System.Threading.Thread.Sleep(5000);
+                Console.WriteLine($"\nVeicoli della tabella \"{tableName}\" riportati a video. Premere un tasto per continuare.");
+                Console.ReadKey();
+                //System.Threading.Thread.Sleep(5000);
             }
         }
 

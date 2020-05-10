@@ -31,7 +31,7 @@ namespace veicoliDLLProject
         /// Costruttore "vero" della classe Automobili, i parametri sono caricati dinamicamente.
         /// </summary>
         /// <param>Spiegati in Veicolo.cs</param>
-        public Automobili(string targa, string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, int numAirbag, double prezzo, string imgPath = @".\img/genericAuto.jpg" /*Path dell'immagine, se omesso dalla dichiarazione si prende l'immagine generale*/)
+        public Automobili(string targa, string marca, string modello, string colore, double cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, int numAirbag, double prezzo, string imgPath = @".\img/genericAuto.jpg" /*Path dell'immagine, se omesso dalla dichiarazione si prende l'immagine generale*/)
             : base(targa, marca, modello, colore, cilindrata, potenzaKw, immatricolazione, isUsato, isKmZero, kmPercorsi, prezzo, imgPath)
         {
             this.NumAirbag = numAirbag;

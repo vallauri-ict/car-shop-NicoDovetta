@@ -1,7 +1,6 @@
 ﻿#region Riferimenti
 //Interni
 using System;
-using System.ComponentModel;
 using veicoliDLLProject;
 using DatabaseInstruction;
 
@@ -13,6 +12,12 @@ namespace ConsoleAppProject
 {
     class Program
     {
+        private static string connStr = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=autoSalone.accdb";
+        private static UtilsDb u;
+
+        /// <summary>
+        /// Scrive il menù principale a video
+        /// </summary>
         private static void menu()
         {
             Console.Clear();
@@ -26,8 +31,13 @@ namespace ConsoleAppProject
             Console.WriteLine("\nX - FINE LAVORO\n\n");
         }
 
+        /// <summary>
+        /// Stampa il menù delle opzioni e si occupa di smistare al sottoprogramma competente a seconda della scelta.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
+            u = new UtilsDb(connStr);
             char scelta;
             do
             {
@@ -55,6 +65,9 @@ namespace ConsoleAppProject
             while (scelta != 'X' && scelta != 'x');
         }
 
+        /// <summary>
+        /// Si interfaccia con la DLL per la gestione del database e richiama i metodi per creare le tabelle.
+        /// </summary>
         private static void creaTabelle()
         {
             char s;
@@ -66,14 +79,21 @@ namespace ConsoleAppProject
             switch (s)
             {
                 case '1':
-                    UtilsDb.createTableCars();
+                    u.createTableCars();
                     break;
                 case '2':
-                    UtilsDb.createTableMoto();
+                    u.createTableMoto();
                     break;
                 case '3':
-                    UtilsDb.createTableReport();
+                    u.createTableReport();
                     break;
+                case '4':
+                    {
+                        u.createTableCars();
+                        u.createTableMoto();
+                        u.createTableReport();
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("\nRitorno al menù principale.");
@@ -83,6 +103,9 @@ namespace ConsoleAppProject
             }
         }
 
+        /// <summary>
+        /// Si interfaccia con la DLL per la gestione del database e richiama i metodi per aggingere oggetti alle tabelle "Moto" o "Automobili".
+        /// </summary>
         private static void aggiungiVeicolo()
         {
             char s;
@@ -90,24 +113,65 @@ namespace ConsoleAppProject
             Console.Title = "Gestionale database - Aggiunta veicolo";
             Console.Write("Premere:\n1 - Aggiungere una macchina;\n2 - Aggiungere una moto;\nQualsiasi altro tasto per tornare al menù principale.\nSelezione: ");
             s = Console.ReadKey().KeyChar;
+            Console.Clear();
             switch (s)
             {
                 case '1':
                     {
                         Console.WriteLine("Inserisci i valori dei campi separati da uno spazio.\n Lista dei campi:");
                         Console.WriteLine("Targa(string) Marca(string) Modello(string) Colore(string) Cilindrata(int) Potenza(double) " +
-                            "Immatricolazione(Date aaaa-mm-gg) Usato(bool) KmZero(bool) KmPercorsi(float) NumAirbag(int) imgPath(string, omesso per il default)\n");
+                            "Immatricolazione(Date aaaa-mm-gg) Usato(bool) KmZero(bool) KmPercorsi(float) NumAirbag(int) Prezzo(double) imgPath(string, omesso per il default)\n");
                         string[] param = Console.ReadLine().Split(' ');
-                        UtilsDb.addNewVeicol(param, "Automobili");
+                        Automobili a;
+                        try
+                        {
+                            float f;
+                            float.TryParse(param[9], out f);
+                            if (param.Length > 12 && param[12] != "" && param[12] != " ")
+                            {
+                                a = new Automobili(param[0], param[1], param[2], param[3], Convert.ToInt32(param[4]), Convert.ToDouble(param[5]), Convert.ToDateTime(param[6]), Convert.ToBoolean(param[7]), Convert.ToBoolean(param[8]), f, Convert.ToInt32(param[10]), Convert.ToDouble(param[11]), param[12]);
+                            }
+                            else
+                            {
+                                a = new Automobili(param[0], param[1], param[2], param[3], Convert.ToInt32(param[4]), Convert.ToDouble(param[5]), Convert.ToDateTime(param[6]), Convert.ToBoolean(param[7]), Convert.ToBoolean(param[8]), f, Convert.ToInt32(param[10]), Convert.ToDouble(param[11]));
+                            }
+                            u.addNewVeicol(a);
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine(exc.ToString());
+                            System.Threading.Thread.Sleep(3000);
+                            return;
+                        }
                         break;
                     }
                 case '2':
                     {
                         Console.WriteLine("Inserisci i valori dei campi separati da uno spazio.\n Lista dei campi:");
                         Console.WriteLine("Targa(string) Marca(string) Modello(string) Colore(string) Cilindrata(int) Potenza(double) " +
-                            "Immatricolazione(Date aaaa-mm-gg) Usato(bool) KmZero(bool) KmPercorsi(float) MarcaSella(string) imgPath(string, omesso per il default)\n");
+                            "Immatricolazione(Date aaaa-mm-gg) Usato(bool) KmZero(bool) KmPercorsi(float) MarcaSella(string) Prezzo(double) imgPath(string, omesso per il default)\n");
                         string[] param = Console.ReadLine().Split(' ');
-                        UtilsDb.addNewVeicol(param, "Moto");
+                        try
+                        {
+                            float f;
+                            float.TryParse(param[9], out f);
+                            Moto m;
+                            if (param.Length > 12 && param[12] != "" && param[12] != " ")
+                            {
+                                m = new Moto(param[0], param[1], param[2], param[3], Convert.ToInt32(param[4]), Convert.ToDouble(param[5]), Convert.ToDateTime(param[6]), Convert.ToBoolean(param[7]), Convert.ToBoolean(param[8]), f, param[10], Convert.ToDouble(param[11]), param[12]);
+                            }
+                            else
+                            {
+                                m = new Moto(param[0], param[1], param[2], param[3], Convert.ToInt32(param[4]), Convert.ToDouble(param[5]), Convert.ToDateTime(param[6]), Convert.ToBoolean(param[7]), Convert.ToBoolean(param[8]), f, param[10], Convert.ToDouble(param[11]));
+                            }
+                            u.addNewVeicol(m);
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine(exc.ToString());
+                            System.Threading.Thread.Sleep(3000);
+                            return;
+                        }
                         break;
                     }
                 default:
@@ -119,24 +183,34 @@ namespace ConsoleAppProject
             }
         }
 
+        /// <summary>
+        /// Si interfaccia con la DLL per la gestione del database e richiama i metodi per listare le tabelle.
+        /// </summary>
         private static void listaTabella()
         {
             char s;
             Console.Clear();
             Console.Title = "Gestionale database - Lista record tabella";
-            Console.WriteLine("Premere:\n1 - Lista delle macchine;\n2 - Lista delle moto;3 - Lista report di vendita;\nQualsiasi altro tasto per tornare al menù principale.\nSelezione: ");
+            Console.Write("Premere:\n1 - Lista delle macchine;\n2 - Lista delle moto;\n3 - Lista report di vendita;\n4 - Lista tutte le tabelle;\nQualsiasi altro tasto per tornare al menù principale.\nSelezione: ");
             s = Console.ReadKey().KeyChar;
             switch (s)
             {
                 case '1':
-                    UtilsDb.listMacchine();
+                    u.listMacchine();
                     break;
                 case '2':
-                    UtilsDb.listMoto();
+                    u.listMoto();
                     break;
                 case '3':
-                    UtilsDb.listReport();
+                    u.listReport();
                     break;
+                case '4':
+                    {
+                        u.listMacchine();
+                        u.listMoto();
+                        u.listReport();
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("\nRitorno al menù principale.");
@@ -146,24 +220,34 @@ namespace ConsoleAppProject
             }
         }
 
+        /// <summary>
+        /// Si interfaccia con la DLL per la gestione del database e richiama i metodi per cancellare le tabelle.
+        /// </summary>
         private static void cancellaTabella()
         {
             char s;
             Console.Clear();
             Console.Title = "Gestionale database - Cancellazione tabella";
-            Console.WriteLine("1 - Cancellazione tabella \"Automobili\";\n2 - Cancellazione tabella \"Moto\";\n3 - Cancellazione tabella \"Report_Vendite\";\nQualsiasi altro tasto per tornare al menù principale;\nSelezione: ");
+            Console.Write("1 - Cancellazione tabella \"Automobili\";\n2 - Cancellazione tabella \"Moto\";\n3 - Cancellazione tabella \"Report_Vendite\";\n4 - Cancella tutte le tabelle;\nQualsiasi altro tasto per tornare al menù principale;\nSelezione: ");
             s = Console.ReadKey().KeyChar;
             switch (s)
             {
                 case '1':
-                    UtilsDb.dropAutomobili();
+                    u.dropAutomobili();
                     break;
                 case '2':
-                    UtilsDb.dropMoto();
+                    u.dropMoto();
                     break;
                 case '3':
-                    UtilsDb.dropReport();
+                    u.dropReport();
                     break;
+                case '4':
+                    {
+                        u.dropAutomobili();
+                        u.dropMoto();
+                        u.dropReport();
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("\nSelezione non valida, ritorno al menù principale.");
