@@ -18,7 +18,7 @@ namespace veicoliDLLProject
         private string marca; //Marca del veicolo.
         private string modello; //Modello del veicolo.
         private string colore; //Colore del veicolo.
-        private int cilindrata; //Cilindrata del veicolo.
+        private double cilindrata; //Cilindrata del veicolo.
         private double potenzaKw; //Potenza espressa in Kw del veicolo.
         private DateTime immatricolazione; //Data di immatricolazione del veicolo.
         private bool isUsato; //True se il veicolo è usato, False se il veicolo è nuovo.
@@ -32,7 +32,7 @@ namespace veicoliDLLProject
         /// Costruttore base della classe Veicolo, implementato in tutte le classi derivate come ":base()" dopo la dichiarazione dei parametri del costruttore.
         /// </summary>
         /// <param>Spiegati nella dichiarazione delle variabili</param>
-        protected Veicolo(string targa, string marca, string modello, string colore, int cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, double prezzo, string imgPath)
+        protected Veicolo(string targa, string marca, string modello, string colore, double cilindrata, double potenzaKw, DateTime immatricolazione, bool isUsato, bool isKmZero, float kmPercorsi, double prezzo, string imgPath)
         {
             this.Targa = targa;
             this.Marca = marca;
@@ -77,7 +77,7 @@ namespace veicoliDLLProject
             set => colore = value;
         }
 
-        public int Cilindrata
+        public double Cilindrata
         {
             get => cilindrata;
             set => cilindrata = value;

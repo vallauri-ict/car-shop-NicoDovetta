@@ -100,17 +100,17 @@ namespace WindowsFormsAppProject
             {
                 if (cmbTipoVeicolo.SelectedIndex == 0)
                 {
-                    listaVeicoli.Add(new Moto("AA000AA", txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToInt32(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text, Convert.ToDouble(txtPrezzo.Text), imgPath));
+                    listaVeicoli.Add(new Moto(targa, txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToDouble(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text, Convert.ToDouble(txtPrezzo.Text), imgPath));
                 }
                 else
                 {
-                    listaVeicoli.Add(new Automobili("AA000AA", txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToInt32(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), Convert.ToInt32(numAirbag.Value), Convert.ToDouble(txtPrezzo.Text), imgPath));
+                    listaVeicoli.Add(new Automobili(targa, txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToDouble(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), Convert.ToInt32(numAirbag.Value), Convert.ToDouble(txtPrezzo.Text), imgPath));
                 }
                 Close();
             }
             else
             {
-                MessageBox.Show("Targa non valida. Se la macchina non è immatricolata lasciare libero il campo.");
+                MessageBox.Show("Targa non valida. Se la macchina non è immatricolata lasciare libero il campo.", "Autosalone Vallauri");
             }
         }
 
@@ -121,11 +121,19 @@ namespace WindowsFormsAppProject
         private bool checkTarga(ref string targa)
         {
             Regex rgx = new Regex(@"[A - Za - z]{ 2}[0-9]{3}[A-Za-z]{2}");
-            if ((targa.Length == 7 && rgx.IsMatch(targa)) || targa == "")
+            if (targa == "")
             {
-                if (targa == "")
+                targa = Utils.makeTarga(listaVeicoli);
+                return true;
+            }
+            else if (rgx.IsMatch(targa))
+            {
+                foreach(Veicolo v in listaVeicoli)
                 {
-                    targa = Utils.makeTarga(listaVeicoli);
+                    if (v.Targa == targa)
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }
@@ -147,7 +155,7 @@ namespace WindowsFormsAppProject
             imgPath = ofd.FileName;
             if (!imgPath.Contains(".png") || !imgPath.Contains(".jpg") || !imgPath.Contains(".jpeg"))
             {
-                MessageBox.Show("Estensioni accettate .png, .jpg, .jpeg.");
+                MessageBox.Show("Estensioni accettate .png, .jpg, .jpeg.", "Autosalone Vallauri");
                 imgPath = @".\img/noPhoto.jpg";
             }
         }
@@ -157,7 +165,7 @@ namespace WindowsFormsAppProject
             double _;
             if (!double.TryParse(txtPrezzo.Text, out _))
             {
-                MessageBox.Show("Il prezzo deve essere un numero.");
+                MessageBox.Show("Il prezzo deve essere un numero.", "Autosalone Vallauri");
             }
         }
     }

@@ -28,9 +28,9 @@ namespace veicoliDLLProject
         /// <where>Main riga:35</where>
         public static void caricaDatiDiTest(SerialBindList<Veicolo> listaVeicoli)
         {
-            Moto m = new Moto("1", "Honda", "Tsunami", "Rosso", 1000, 120, DateTime.Now, false, false, 0, "Quintino", 1035);
+            Moto m = new Moto("exp0", "Honda", "Tsunami", "Rosso", 1000, 120, DateTime.Now, false, false, 0, "Quintino", 1035);
             listaVeicoli.Add(m);
-            Automobili a = new Automobili("2", "Jeep", "Compass", "Blue", 1600, 90, DateTime.Now, false, false, 0, 8, 1235);
+            Automobili a = new Automobili("exp1", "Jeep", "Compass", "Blue", 1600, 90, DateTime.Now, false, false, 0, 8, 1235);
             listaVeicoli.Add(a);
         }
 
