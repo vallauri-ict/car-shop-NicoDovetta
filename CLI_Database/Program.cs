@@ -28,9 +28,9 @@ namespace ConsoleAppProject
             Console.WriteLine("1 - CREATE TABLE;");
             Console.WriteLine("2 - ADD NEW ITEM;");
             Console.WriteLine("3 - LIST;");
-            Console.WriteLine("4 - (not written yet);");
-            Console.WriteLine("5 - (not written yet);");
-            Console.WriteLine("D - DROPTABLE;");
+            Console.WriteLine("C - CREA DATABASE;");
+            Console.WriteLine("B - DROP DATABASE;");
+            Console.WriteLine("D - DROP TABLE;");
             Console.WriteLine("\nX - FINE LAVORO\n\n");
         }
 
@@ -58,6 +58,9 @@ namespace ConsoleAppProject
                     case '3':
                         listaTabella();
                         break;
+                    case 'b':
+                        dropDatabase();
+                        break;
                     case 'd':
                         cancellaTabella();
                         break;
@@ -66,6 +69,36 @@ namespace ConsoleAppProject
                 }
             }
             while (scelta != 'X' && scelta != 'x');
+        }
+
+        /// <summary>
+        /// Cancella il file che contiene il database, ne consegue la perdita dei dati.
+        /// </summary>
+        private static void dropDatabase()
+        {
+            char s;
+            Console.Clear();
+            Console.Title = "Gestione database - Creazione tabelle";
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Sei sicuro di voler cancellare il database (s/n)?");
+                s = Console.ReadKey().KeyChar;
+            } while (s != 's' && s != 'n');
+            if (s == 's')
+            {
+                try
+                {
+                    File.Delete(accessDbPath);
+                    Console.WriteLine("Database cancellato correttamente.");
+                    System.Threading.Thread.Sleep(3000);
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine("\n" + exc.ToString()+"\nPremi un tasto per continuare.");
+                    Console.ReadKey();
+                }
+            }
         }
 
         /// <summary>
