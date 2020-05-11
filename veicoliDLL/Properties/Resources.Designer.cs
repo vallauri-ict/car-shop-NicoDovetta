@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WindowsFormsAppProject.Properties {
+namespace veicoliDLLProject.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WindowsFormsAppProject.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WindowsFormsAppProject.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("veicoliDLLProject.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,11 @@ namespace WindowsFormsAppProject.Properties {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a autoSalone.accdb.
+        ///   Cerca una stringa localizzata simile a Veicoli.json.
         /// </summary>
-        internal static string DB_Name {
+        internal static string JSON_Save {
             get {
-                return ResourceManager.GetString("DB_Name", resourceCulture);
+                return ResourceManager.GetString("JSON_Save", resourceCulture);
             }
         }
     }

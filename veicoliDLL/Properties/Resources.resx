@@ -117,12 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreateDB_Name" xml:space="preserve">
-    <value>database.accdb</value>
-    <comment>Nome del database base access.</comment>
-  </data>
-  <data name="DB_Name" xml:space="preserve">
-    <value>autoSalone.accdb</value>
-    <comment>Nome del database access.</comment>
+  <data name="JSON_Save" xml:space="preserve">
+    <value>Veicoli.json</value>
+    <comment>In caso non si trovasse il database potrebbe ancora esserci il salvataggio in ".json".</comment>
   </data>
 </root>
