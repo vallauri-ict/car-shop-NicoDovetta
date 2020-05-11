@@ -331,5 +331,31 @@ namespace DatabaseInstruction
         }
 
         #endregion listTable
+
+        /// <summary>
+        /// Cancella TUTTO il database.
+        /// </summary>
+        public void dropDatabase()
+        {
+            if (connStr != null)
+            {
+                OleDbConnection con = new OleDbConnection(connStr);
+                using (con)
+                {
+                    con.Open();
+                    OleDbCommand cmd = new OleDbCommand("DROP DATABASE autoSalone", con);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (OleDbException exc)
+                    {
+                        Console.WriteLine("\n" + exc.ToString());
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+            }
+        }
     }
 }
