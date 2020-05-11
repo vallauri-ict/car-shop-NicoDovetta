@@ -61,6 +61,15 @@ namespace CLI_Database.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a database.accdb.
+        /// </summary>
+        internal static string CreateDB_Name {
+            get {
+                return ResourceManager.GetString("CreateDB_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a autoSalone.accdb.
         /// </summary>
         internal static string DB_Name {

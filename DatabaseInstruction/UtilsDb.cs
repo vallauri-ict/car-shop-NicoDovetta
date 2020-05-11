@@ -28,7 +28,7 @@ namespace DatabaseInstruction
         /// <summary>
         /// Crea la tabella "Automobili".
         /// </summary>
-        public void createTableCars()
+        public void CreateTableCars()
         {
             if (connStr != null)
             {
@@ -47,14 +47,13 @@ namespace DatabaseInstruction
                             "Colore VARCHAR(255), Cilindrata double,"+
                             "Potenza double, Immatricolazione date,"+
                             "Usato bit, Km0 bit,"+
-                            "KmPercorsi int, NumAirbag int, Prezzo double, ImgPath VARCHAR(255));";
+                            "KmPercorsi double, NumAirbag int, Prezzo double, ImgPath VARCHAR(255));";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n\n" + exc.Message);
-                        System.Threading.Thread.Sleep(3000);
+                        Error(exc);
                         return;
                     }
 
@@ -67,7 +66,7 @@ namespace DatabaseInstruction
         /// <summary>
         /// Crea la tabella "Moto".
         /// </summary>
-        public void createTableMoto()
+        public void CreateTableMoto()
         {
             if (connStr != null)
             {
@@ -86,14 +85,13 @@ namespace DatabaseInstruction
                             "Colore VARCHAR(255), Cilindrata double," +
                             "Potenza double, Immatricolazione date," +
                             "Usato bit, Km0 bit," +
-                            "KmPercorsi int, MarcaSella VARCHAR(255), Prezzo double, ImgPath varchar(255));";
+                            "KmPercorsi double, MarcaSella VARCHAR(255), Prezzo double, ImgPath varchar(255));";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n\n" + exc.Message);
-                        System.Threading.Thread.Sleep(3000);
+                        Error(exc);
                         return;
                     }
 
@@ -106,7 +104,7 @@ namespace DatabaseInstruction
         /// <summary>
         /// Crea la tabella "Report_Vendite".
         /// </summary>
-        public void createTableReport()
+        public void CreateTableReport()
         {
             if (connStr != null)
             {
@@ -125,14 +123,13 @@ namespace DatabaseInstruction
                             "Colore VARCHAR(255), Cilindrata double," +
                             "Potenza double, Immatricolazione VARCHAR(255)," +
                             "Usato bit, Km0 bit," +
-                            "KmPercorsi int, MarcaSella VARCHAR(255), NumAirbag int, Prezzo double);";
+                            "KmPercorsi double, MarcaSella VARCHAR(255), NumAirbag int, Prezzo double);";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n\n" + exc.Message);
-                        System.Threading.Thread.Sleep(3000);
+                        Error(exc);
                         return;
                     }
 
@@ -148,7 +145,7 @@ namespace DatabaseInstruction
         /// Aggiunge un veicolo automaticamente a una delle 2 tabelle (Moto o Automobili) a seconda del tipo del veicolo.
         /// </summary>
         /// <param name="v">Veicolo da aggiungere alla tabella del tipo rispettivo.</param>
-        public void addNewVeicol(Veicolo v)
+        public void AddNewVeicol(Veicolo v)
         {
             if (connStr != null)
             {
@@ -179,7 +176,7 @@ namespace DatabaseInstruction
                     cmd.Parameters.Add("@Immatricolazione", OleDbType.Date).Value = v.Immatricolazione;
                     cmd.Parameters.Add("@Usato", OleDbType.Boolean).Value = v.IsUsato;
                     cmd.Parameters.Add("@Km0", OleDbType.Boolean).Value = v.IsKmZero;
-                    cmd.Parameters.Add("@KmPercorsi", OleDbType.Integer).Value = v.KmPercorsi;
+                    cmd.Parameters.Add("@KmPercorsi", OleDbType.Double).Value = v.KmPercorsi;
                     if (v is Moto)
                     {
                         cmd.Parameters.Add(new OleDbParameter("@MarcaSella", OleDbType.VarChar, 255)).Value = (v as Moto).MarcaSella;
@@ -199,8 +196,7 @@ namespace DatabaseInstruction
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n" + exc.Message);
-                        System.Threading.Thread.Sleep(5000);
+                        Error(exc);
                         return;
                     }
                     Console.WriteLine("\nVeicolo inserito correttamente.");
@@ -211,28 +207,42 @@ namespace DatabaseInstruction
 
         #region dropTable
 
-        public void dropMoto()
+        /// <summary>
+        /// Imposta il nome della tabella "Moto" per evitare che si possano cancellare più tabelle al posto di una sola.
+        /// </summary>
+        public void DropMoto()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"DROP TABLE Moto";
-            execDropTable(cmd, "Moto");
+            ExecDropTable(cmd, "Moto");
         }
 
-        public void dropAutomobili()
+        /// <summary>
+        /// Imposta il nome della tabella "Automobili" per evitare che si possano cancellare più tabelle al posto di una sola.
+        /// </summary>
+        public void DropAutomobili()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"DROP TABLE Automobili";
-            execDropTable(cmd, "Automobili");
+            ExecDropTable(cmd, "Automobili");
         }
 
-        public void dropReport()
+        /// <summary>
+        /// Imposta il nome della tabella "Report_Vendite" per evitare che si possano cancellare più tabelle al posto di una sola.
+        /// </summary>
+        public void DropReport()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"DROP TABLE Report_Vendite";
-            execDropTable(cmd, "Report_Vendite");
+            ExecDropTable(cmd, "Report_Vendite");
         }
 
-        private static void execDropTable(OleDbCommand cmd, string tableName)
+        /// <summary>
+        /// Esegue la non query e cancella la tabella.
+        /// </summary>
+        /// <param name="cmd">Contiene il comando</param>
+        /// <param name="tableName">Contiene il nome della tabella della quale si da il messaggio finale nel caso la query sia andata a buon fine.</param>
+        private static void ExecDropTable(OleDbCommand cmd, string tableName)
         {
             if (connStr != null)
             {
@@ -246,15 +256,14 @@ namespace DatabaseInstruction
                     {
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
+                        Console.WriteLine($"\nTabella \"{tableName}\" cancellata.");
+                        System.Threading.Thread.Sleep(3000);
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n\n" + exc.Message);
-                        System.Threading.Thread.Sleep(3000);
+                        Error(exc);
                         return;
                     }
-                    Console.WriteLine($"\nTabella \"{tableName}\" cancellata.");
-                    System.Threading.Thread.Sleep(3000);
                 }
             }
         }
@@ -266,31 +275,31 @@ namespace DatabaseInstruction
         /// <summary>
         /// Imposta la query per prendere tutti i dati della tabella "Automobili" e richiama il metodo che si occupa di scrivere a video ciò che viene riportato.
         /// </summary>
-        public void listMacchine()
+        public void ListMacchine()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"SELECT * FROM Automobili";
-            execListTable(cmd, "Automobili");
+            ExecListTable(cmd, "Automobili");
         }
 
         /// <summary>
         /// Imposta la query per prendere tutti i dati della tabella "Moto" e richiama il metodo che si occupa di scrivere a video ciò che viene riportato.
         /// </summary>
-        public void listMoto()
+        public void ListMoto()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"SELECT * FROM Moto";
-            execListTable(cmd, "Moto");
+            ExecListTable(cmd, "Moto");
         }
 
         /// <summary>
         /// Imposta la query per prendere tutti i dati della tabella "Report_Vendite" e richiama il metodo che si occupa di scrivere a video ciò che viene riportato.
         /// </summary>
-        public void listReport()
+        public void ListReport()
         {
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandText = @"SELECT * FROM Report_Vendite";
-            execListTable(cmd, "ReportVendite");
+            ExecListTable(cmd, "ReportVendite");
         }
 
         /// <summary>
@@ -298,7 +307,7 @@ namespace DatabaseInstruction
         /// </summary>
         /// <param name="cmd">Comando che contiene la query. Impostato in un metodo per ogni tabella per impedire la sql injection.</param>
         /// <param name="tableName">Nome della tabella della quale si vogliono visualizzare i record.</param>
-        private static void execListTable(OleDbCommand cmd, string tableName)
+        private static void ExecListTable(OleDbCommand cmd, string tableName)
         {
             if (connStr != null)
             {
@@ -319,8 +328,7 @@ namespace DatabaseInstruction
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n\n" + exc.Message);
-                        System.Threading.Thread.Sleep(3000);
+                        Error(exc);
                         return;
                     }
                 }
@@ -333,9 +341,10 @@ namespace DatabaseInstruction
         #endregion listTable
 
         /// <summary>
-        /// Cancella TUTTO il database.
+        /// Metodo di modifica dei dati.
         /// </summary>
-        public void dropDatabase()
+        /// <param name="query">Stringa che contiene il comando sql per modificare i dati.</param>
+        public void ModificaDati(string query)
         {
             if (connStr != null)
             {
@@ -343,19 +352,89 @@ namespace DatabaseInstruction
                 using (con)
                 {
                     con.Open();
-                    OleDbCommand cmd = new OleDbCommand("DROP DATABASE autoSalone", con);
+                    OleDbCommand cmd = new OleDbCommand(query, con);
+                    cmd.Prepare();
+
                     try
                     {
                         cmd.ExecuteNonQuery();
                     }
                     catch (OleDbException exc)
                     {
-                        Console.WriteLine("\n" + exc.ToString());
-                        Console.ReadKey();
+                        Error(exc);
                         return;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Prende dal database tutti i veicoli appartenenti alle tabelle "Moto" e "Automobili" e gli restituisce in una lista.
+        /// </summary>
+        /// <param name="list">Lista passata per referenza nella quale sono contenuti i veicoli.</param>
+        public void GetVeicolList(ref SerialBindList<Veicolo> list)
+        {
+            if (connStr != null)
+            {
+                OleDbConnection con = new OleDbConnection(connStr);
+                using (con)
+                {
+                    con.Open();
+                    try
+                    {
+                        OleDbCommand cmd = new OleDbCommand("SELECT * FROM Automobili;", con);
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Console.Clear();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                float f;
+                                float.TryParse(reader[9].ToString(), out f);
+                                list.Add(new Automobili(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), Convert.ToDouble(reader[4].ToString()), Convert.ToDouble(reader[5].ToString()), Convert.ToDateTime(reader[6].ToString()), Convert.ToBoolean(reader[7].ToString()), Convert.ToBoolean(reader[8].ToString()), f, Convert.ToInt32(reader[10].ToString()), Convert.ToDouble(reader[11].ToString()), reader[12].ToString()));
+                            }
+                            reader.Close();
+                        }
+                    }
+                    catch (OleDbException exc)
+                    {
+                        Error(exc);
+                        return;
+                    }
+                    try
+                    {
+                        OleDbCommand cmd = new OleDbCommand("SELECT * FROM Moto;", con);
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Console.Clear();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                float f;
+                                float.TryParse(reader[9].ToString(), out f);
+                                list.Add(new Moto(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), Convert.ToDouble(reader[4].ToString()), Convert.ToDouble(reader[5].ToString()), Convert.ToDateTime(reader[6].ToString()), Convert.ToBoolean(reader[7].ToString()), Convert.ToBoolean(reader[8].ToString()), f, reader[10].ToString(), Convert.ToDouble(reader[11].ToString()), reader[12].ToString()));
+                            }
+                            reader.Close();
+                        }
+                    }
+                    catch (OleDbException exc)
+                    {
+                        Error(exc);
+                        return;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Procedura standard di gestione dell'errore su un'istruzione al database.
+        /// </summary>
+        /// <param name="exc">Variabile contenente l'errore.</param>
+        private static void Error(OleDbException exc)
+        {
+            Console.Clear();
+            Console.WriteLine($"\n{exc.Message}\nPremi un tasto qualsiasi per continuare.");
+            Console.ReadKey();
         }
     }
 }

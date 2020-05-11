@@ -85,6 +85,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -101,6 +102,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DatabaseInstruction\DatabaseInstruction.csproj">
+      <Project>{65C8CCB0-23D4-4E40-8EAF-4E0ED699F37C}</Project>
+      <Name>DatabaseInstruction</Name>
+    </ProjectReference>
     <ProjectReference Include="..\veicoliDLL\veicoliDLLProject.csproj">
       <Project>{17e8d269-cee4-45b4-8a4b-f39ed97b8d72}</Project>
       <Name>veicoliDLLProject</Name>

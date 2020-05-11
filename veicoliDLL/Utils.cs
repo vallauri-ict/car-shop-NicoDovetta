@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 //Esterni
@@ -21,6 +21,13 @@ namespace veicoliDLLProject
 
     public class Utils
     {
+        #region pathVariables
+
+        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";//Percorso della cartella "resources".
+        private static string jsonSave = Path.Combine(resourcesDirectoryPath, Properties.Resources.JSON_Save);//Percorso del file contenente il dsalvataggio in formato json.
+
+        #endregion pathVariables
+
         /// <summary>
         /// Crea dei dati statici per effettuare un test delle funzionalità.
         /// Aggiornato: 14/12/2019.
@@ -41,9 +48,9 @@ namespace veicoliDLLProject
         /// <param name="listaVeicoli">Contiene/Conterrà i dati presenti nel file Veicoli.json</param>
         public static void loadData(SerialBindList<Veicolo> listaVeicoli)
         {
-            if (File.Exists(@".\Veicoli.json"))
+            if (File.Exists(jsonSave))
             {
-                apriSalvataggi(listaVeicoli, @".\Veicoli.json");
+                apriSalvataggi(listaVeicoli, jsonSave);
             }
             else
             {
@@ -63,13 +70,12 @@ namespace veicoliDLLProject
         }
 
         /// <summary>
-        /// Da un file orignie ".json", carico la lista con i dati presenti nel file
+        /// Da un file orignie ".json", carico la lista con i dati presenti nel file.
         /// </summary>
-        /// <param name="listaVeicoli">Lista di destinazione degi oggetti del file ".json"</param>
-        /// <param name="path">Path di provenienza del file ".json"</param>
+        /// <param name="listaVeicoli">Lista di destinazione degi oggetti del file ".json".</param>
+        /// <param name="path">Path di provenienza del file ".json".</param>
         public static void apriSalvataggi(SerialBindList<Veicolo> listaVeicoli, string path)
         {
-            listaVeicoli.Clear();
             string json = File.ReadAllText(path);
             object[] veicoli = JsonConvert.DeserializeObject<object[]>(json);
             for (int i = 0; i < veicoli.Length; i++)
@@ -97,8 +103,8 @@ namespace veicoliDLLProject
         /// *** Tipo Generico ***
         /// Accetta qualunque oggetto di qualuncque tipo.
         /// </typeparam>
-        /// <param name="objectlist">Lista source</param>
-        /// <param name="pathName">Indirizzo di destinazione del file ".json"</param>
+        /// <param name="objectlist">Lista source.</param>
+        /// <param name="pathName">Indirizzo di destinazione del file ".json".</param>
         public static void serializeToJson<T>(IEnumerable<T> objectlist, string pathName)
         {
             string json = JsonConvert.SerializeObject(objectlist, Formatting.Indented);
@@ -128,11 +134,19 @@ namespace veicoliDLLProject
             }
         }
 
-        public static void visualNew(Form Main, BindingList<Veicolo> lstVeicoli)
+        /// <summary>
+        /// Richiamato al caricamento della form si occupa di mostrare a video i veicoli presenti nella lista.
+        /// </summary>
+        /// <param name="lstVeicoli">Lista che contiene i veicoli.</param>
+        public static void visualNew(Form f, BindingList<Veicolo> lstVeicoli)
         {
             orderListbyImmatricolazione(lstVeicoli);
         }
 
+        /// <summary>
+        /// Ordina la lista in base alla data di immatricolazione.
+        /// </summary>
+        /// <param name="lstVeicoli">Lista da ordinare.</param>
         private static void orderListbyImmatricolazione(BindingList<Veicolo> lstVeicoli)
         {
             for (int i = 0; i < lstVeicoli.Count; i++)
@@ -195,6 +209,35 @@ namespace veicoliDLLProject
             }
             html = html.Replace("c#_automatic_substitution;", (nuovo + usato));
             File.WriteAllText(pathName, html);
+        }
+
+        /// <summary>
+        /// Tramite una regular expression controlla la targa
+        /// </summary>
+        /// <returns>True se la targa va bene, false se la targa non è accettabile.</returns>
+        public static bool checkTarga(ref string targa, SerialBindList<Veicolo> listaVeicoli)
+        {
+            Regex rgx = new Regex(@"[A - Za - z]{ 2}[0-9]{3}[A-Za-z]{2}");
+            if (targa == "")
+            {
+                targa = makeTarga(listaVeicoli);
+                return true;
+            }
+            else if (rgx.IsMatch(targa))
+            {
+                foreach (Veicolo v in listaVeicoli)
+                {
+                    if (v.Targa == targa.ToUpper())
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

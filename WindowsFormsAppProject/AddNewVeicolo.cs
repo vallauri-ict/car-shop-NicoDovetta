@@ -2,7 +2,6 @@
 //Interni
 using System;
 using System.Drawing;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using veicoliDLLProject;
 
@@ -96,7 +95,7 @@ namespace WindowsFormsAppProject
         private void btnAggiungi_Click(object sender, EventArgs e)
         {
             string targa = txtTarga.Text;
-            if (checkTarga(ref targa))
+            if (Utils.checkTarga(ref targa, listaVeicoli))
             {
                 if (cmbTipoVeicolo.SelectedIndex == 0)
                 {
@@ -110,36 +109,7 @@ namespace WindowsFormsAppProject
             }
             else
             {
-                MessageBox.Show("Targa non valida. Se la macchina non è immatricolata lasciare libero il campo.", "Autosalone Vallauri");
-            }
-        }
-
-        /// <summary>
-        /// Tramite una regular expression controlla la targa
-        /// </summary>
-        /// <returns></returns>
-        private bool checkTarga(ref string targa)
-        {
-            Regex rgx = new Regex(@"[A - Za - z]{ 2}[0-9]{3}[A-Za-z]{2}");
-            if (targa == "")
-            {
-                targa = Utils.makeTarga(listaVeicoli);
-                return true;
-            }
-            else if (rgx.IsMatch(targa))
-            {
-                foreach(Veicolo v in listaVeicoli)
-                {
-                    if (v.Targa == targa)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return false;
+                MessageBox.Show("Targa non valida. Se la macchina non è immatricolata lasciare libero il campo.", "Autosalone Nico");
             }
         }
 
@@ -155,7 +125,7 @@ namespace WindowsFormsAppProject
             imgPath = ofd.FileName;
             if (!imgPath.Contains(".png") || !imgPath.Contains(".jpg") || !imgPath.Contains(".jpeg"))
             {
-                MessageBox.Show("Estensioni accettate .png, .jpg, .jpeg.", "Autosalone Vallauri");
+                MessageBox.Show("Estensioni accettate .png, .jpg, .jpeg.", "Autosalone Nico");
                 imgPath = @".\img/noPhoto.jpg";
             }
         }
@@ -165,7 +135,7 @@ namespace WindowsFormsAppProject
             double _;
             if (!double.TryParse(txtPrezzo.Text, out _))
             {
-                MessageBox.Show("Il prezzo deve essere un numero.", "Autosalone Vallauri");
+                MessageBox.Show("Il prezzo deve essere un numero.", "Autosalone Nico");
             }
         }
     }

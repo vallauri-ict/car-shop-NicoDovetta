@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using veicoliDLLProject;
 using System.IO;
 using System.Diagnostics;
+using DatabaseInstruction;
 
 //Esterni
 
@@ -14,7 +15,20 @@ namespace WindowsFormsAppProject
 {
     public partial class Main : Form
     {
-        SerialBindList<Veicolo> listaVeicoli = new SerialBindList<Veicolo>();
+        #region dbPathSetting
+
+        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";//Percorso della cartella "resources".
+        private static string DbPath = Path.Combine(resourcesDirectoryPath, Properties.Resources.DB_Name);//Percorso del file contenente il database.
+        private static string connStr = $"Provider=Microsoft.Ace.Oledb.12.0;Data Source={DbPath};";//Stringa di connessione completa al database access.
+
+        #endregion dbPathSetting
+
+        #region globalVariables
+
+        UtilsDb dbManager;//Evita che 2 o più persone modifichino contemporaneamente il database.
+        SerialBindList<Veicolo> listaVeicoli = new SerialBindList<Veicolo>();//Contiene la lista dei veicoli.
+
+        #endregion globalVariables
 
         public Main()
         {
@@ -28,8 +42,20 @@ namespace WindowsFormsAppProject
         /// </summary>
         private void Main_Load(object sender, EventArgs e)
         {
-            Utils.loadData(listaVeicoli);
-            Utils.visualNew(this, listaVeicoli);
+            if (File.Exists(DbPath))
+            {
+                dbManager = new UtilsDb(connStr);
+                dbManager.GetVeicolList(ref listaVeicoli);
+            }
+            else
+            {
+                MessageBox.Show("Impossibile trovare il database. Contattare l'amministratore.", "Autosalone Nico");
+            }
+            if (listaVeicoli.Count < 0)
+            {
+                Utils.loadData(listaVeicoli);
+                Utils.visualNew(this, listaVeicoli);
+            }
         }
 
         /// <summary>
@@ -72,7 +98,7 @@ namespace WindowsFormsAppProject
             }
             else
             {
-                MessageBox.Show("Devi inserire almeno un veicolo per procedere con questa operazione.", "Autosalone Vallauri");
+                MessageBox.Show("Devi inserire almeno un veicolo per procedere con questa operazione.", "Autosalone Nico");
             }
         }
 
