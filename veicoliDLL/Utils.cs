@@ -157,40 +157,16 @@ namespace veicoliDLLProject
             {
                 if (visual == 0)
                 {
-                    if (item is Automobili)
+                    if ((item.GetType().ToString()).Contains("Automobili"))
                     {
-                        dgv.Rows.Add();
-                        dgv.Rows[dgv.RowCount - 1].Cells[0].Value = item.Targa;
-                        dgv.Rows[dgv.RowCount - 1].Cells[1].Value = item.Marca;
-                        dgv.Rows[dgv.RowCount - 1].Cells[2].Value = item.Modello;
-                        dgv.Rows[dgv.RowCount - 1].Cells[3].Value = item.Colore;
-                        dgv.Rows[dgv.RowCount - 1].Cells[4].Value = item.Cilindrata.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[5].Value = item.PotenzaKw.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[6].Value = item.Immatricolazione.ToString("####/##/##");
-                        dgv.Rows[dgv.RowCount - 1].Cells[7].Value = (item.IsUsato ? "Sì" : "No");
-                        dgv.Rows[dgv.RowCount - 1].Cells[8].Value = (item.IsKmZero ? "Sì" : "No");
-                        dgv.Rows[dgv.RowCount - 1].Cells[9].Value = item.KmPercorsi.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[10].Value = (item as Automobili).NumAirbag.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[11].Value = $"€ {item.Prezzo.ToString()}";
+                        dgv.Rows.Add(item.ToString().Split('£'));
                     }
                 }
                 else
                 {
-                    if (item is Moto)
+                    if ((item.GetType().ToString()).Contains("Moto"))
                     {
-                        dgv.Rows.Add();
-                        dgv.Rows[dgv.RowCount - 1].Cells[0].Value = item.Targa;
-                        dgv.Rows[dgv.RowCount - 1].Cells[1].Value = item.Marca;
-                        dgv.Rows[dgv.RowCount - 1].Cells[2].Value = item.Modello;
-                        dgv.Rows[dgv.RowCount - 1].Cells[3].Value = item.Colore;
-                        dgv.Rows[dgv.RowCount - 1].Cells[4].Value = item.Cilindrata.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[5].Value = item.PotenzaKw.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[6].Value = item.Immatricolazione.ToString("####/##/##");
-                        dgv.Rows[dgv.RowCount - 1].Cells[7].Value = (item.IsUsato ? "Sì" : "No");
-                        dgv.Rows[dgv.RowCount - 1].Cells[8].Value = (item.IsKmZero ? "Sì" : "No");
-                        dgv.Rows[dgv.RowCount - 1].Cells[9].Value = item.KmPercorsi.ToString();
-                        dgv.Rows[dgv.RowCount - 1].Cells[10].Value = (item as Moto).MarcaSella;
-                        dgv.Rows[dgv.RowCount - 1].Cells[11].Value = $"€ {item.Prezzo.ToString()}";
+                        dgv.Rows.Add(item.ToString().Split('£'));
                     }
                 }
             }
@@ -203,6 +179,9 @@ namespace veicoliDLLProject
         /// <param name="visual">Campo che mi indica quali veicoli devo caricare.</param>
         private static void settaDgv(DataGridView dgv, int visual)
         {
+            //Cancella tutte le righe che contengono dati della vecchia visualizzazione.
+            dgv.Rows.Clear();
+
             dgv.ColumnCount = 12;
             dgv.Columns[0].HeaderText = "Targa";
             dgv.Columns[1].HeaderText = "Marca";

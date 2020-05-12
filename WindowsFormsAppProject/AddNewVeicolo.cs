@@ -19,7 +19,7 @@ namespace WindowsFormsAppProject
 
         private SerialBindList<Veicolo> listaVeicoli;//Riferimento alla lista "vera", contenente tutti i veicoli
         private KnownColor color = KnownColor.Black;//colore del veicolo scelto dall'utente
-        
+        private string imgPath = noImgPath;
 
         /// <summary>
         /// Costruttore vuoto
