@@ -129,4 +129,8 @@
     <value>noPhoto.jpg</value>
     <comment>Nel caso non ci sia l'immagine mette quella base.</comment>
   </data>
+  <data name="Sito" xml:space="preserve">
+    <value>index.html</value>
+    <comment>Pagina principale del sito.</comment>
+  </data>
 </root>

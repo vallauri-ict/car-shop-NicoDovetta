@@ -86,5 +86,14 @@ namespace WindowsFormsAppProject.Properties {
                 return ResourceManager.GetString("NO_Img", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a index.html.
+        /// </summary>
+        internal static string Sito {
+            get {
+                return ResourceManager.GetString("Sito", resourceCulture);
+            }
+        }
     }
 }

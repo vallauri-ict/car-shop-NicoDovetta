@@ -18,6 +18,7 @@ namespace ConsoleAppProject
         private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi";//Percorso della cartella "resources".
         private static string DbPath = Path.Combine(resourcesDirectoryPath, CLI_Database.Properties.Resources.DB_Name);//Percorso del file contenente il database.
         private static string connStr = $"Provider=Microsoft.Ace.Oledb.12.0;Data Source={DbPath};";//Stringa di connessione completa al database access.
+        private static string jsonSave = Path.Combine($"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi\\Backup", CLI_Database.Properties.Resources.JSON_Save);//Percorso del file contenente il dsalvataggio in formato json.
 
         #endregion dbPathSetting
 
@@ -61,6 +62,7 @@ namespace ConsoleAppProject
                 Console.WriteLine("B - CREA BACKUP;");
                 Console.WriteLine("C - CREA DATABASE;");
                 Console.WriteLine("D - DROP DATABASE;");
+                Console.WriteLine("R - RECUPERA DATI DA JSON;");
             }
             else
             {
@@ -110,6 +112,9 @@ namespace ConsoleAppProject
                             break;
                         case 'b':
                             creaBackup();
+                            break;
+                        case 'r':
+                            prendiJson();
                             break;
                         default:
                             break;
@@ -190,7 +195,7 @@ namespace ConsoleAppProject
             {
                 case '1':
                     {
-                        Console.WriteLine("Targa(string) Marca(string) Modello(string) Colore(string) Cilindrata(int) Potenza(double) " +
+                        Console.WriteLine("Targa(string) Marca(string) Modello(string) Colore(color) Cilindrata(int) Potenza(double) " +
                             "Immatricolazione(Date aaaa-mm-gg) Usato(bool) KmZero(bool) KmPercorsi(float) NumAirbag(int) Prezzo(double) imgPath(string, omesso per il default)\n");
                         string[] param = Console.ReadLine().Split('\\');
                         if (Utils.checkTarga(ref param[0], list))
@@ -216,6 +221,8 @@ namespace ConsoleAppProject
                                 }
                                 u.AddNewVeicol(a);
                                 doneAuto = false;
+                                Console.WriteLine("Veicolo inserito correttamente.");
+                                System.Threading.Thread.Sleep(2000);
                             }
                             catch (Exception exc)
                             {
@@ -255,6 +262,8 @@ namespace ConsoleAppProject
                                 }
                                 u.AddNewVeicol(m);
                                 doneMoto = false;
+                                Console.WriteLine("Veicolo inserito correttamente.");
+                                System.Threading.Thread.Sleep(2000);
                             }
                             catch (Exception exc)
                             {
@@ -632,11 +641,34 @@ namespace ConsoleAppProject
             }
             else
             {
+                Console.Clear();
                 Console.WriteLine("Nessun Backup trovato. Creare il database?(s/n)");
                 if (Console.ReadKey().KeyChar == 's')
                 {
                     creaDatabase();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Prende i dati dal json e gli mette nella list, successivamente gli aggiunge alle tabelle nel database.
+        /// </summary>
+        private static void prendiJson()
+        {
+            try
+            {
+                Utils.apriSalvataggi(list, jsonSave);
+                foreach (Veicolo item in list)
+                {
+                    u.AddNewVeicol(item);
+                }
+            }
+            catch (Exception exc)
+            {
+                Console.Clear();
+                Console.WriteLine($"{exc.Message}");
+                System.Threading.Thread.Sleep(2000);
+                return;
             }
         }
 

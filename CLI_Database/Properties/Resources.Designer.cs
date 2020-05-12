@@ -77,5 +77,14 @@ namespace CLI_Database.Properties {
                 return ResourceManager.GetString("DB_Name", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Veicoli.json.
+        /// </summary>
+        internal static string JSON_Save {
+            get {
+                return ResourceManager.GetString("JSON_Save", resourceCulture);
+            }
+        }
     }
 }
