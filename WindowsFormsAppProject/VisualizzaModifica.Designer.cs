@@ -61,6 +61,7 @@
 			this.btnVendi = new System.Windows.Forms.Button();
 			this.btnElimina = new System.Windows.Forms.Button();
 			this.btnChiudi = new System.Windows.Forms.Button();
+			this.fbd = new System.Windows.Forms.FolderBrowserDialog();
 			((System.ComponentModel.ISupportInitialize)(this.pcbImg)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numAirbag)).BeginInit();
 			this.SuspendLayout();
@@ -435,5 +436,6 @@
 		private System.Windows.Forms.Button btnVendi;
 		private System.Windows.Forms.Button btnElimina;
 		private System.Windows.Forms.Button btnChiudi;
+		private System.Windows.Forms.FolderBrowserDialog fbd;
 	}
 }

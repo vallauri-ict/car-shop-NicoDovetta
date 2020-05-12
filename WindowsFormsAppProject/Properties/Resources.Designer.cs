@@ -88,7 +88,7 @@ namespace WindowsFormsAppProject.Properties {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a index.html.
+        ///   Cerca una stringa localizzata simile a index-skeleton.html.
         /// </summary>
         internal static string Sito {
             get {

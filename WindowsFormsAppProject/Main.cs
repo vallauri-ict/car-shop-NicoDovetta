@@ -24,7 +24,7 @@ namespace WindowsFormsAppProject
         private static string backupDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi\\Backup";//Percorso della cartella "resources".
         private static string jsonSave = Path.Combine(backupDirectoryPath, Properties.Resources.JSON_Save);//Percorso del file contenente il dsalvataggio in formato json.
 
-        private static string sitoDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\www\\pagine";//Percorso della cartella "resources".
+        private static string sitoDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\www";//Percorso della cartella "resources".
         private static string indexPath = Path.Combine(sitoDirectoryPath, Properties.Resources.Sito);//Percorso del file contenente il database.
 
         #endregion resourcePathSetting
@@ -131,7 +131,6 @@ namespace WindowsFormsAppProject
             {
                 //string homepagePath = @".\www\pagine\index.html";
                 Utils.createHtml(listaVeicoli, indexPath);
-                Process.Start(indexPath);
             }
             else
             {

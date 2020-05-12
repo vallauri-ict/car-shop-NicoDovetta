@@ -58,7 +58,6 @@ namespace DatabaseInstruction
                     }
 
                     Console.WriteLine("\nTabella \"Automobili\" creata correttamente.");
-                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }
@@ -96,7 +95,6 @@ namespace DatabaseInstruction
                     }
 
                     Console.WriteLine("\nTabella \"Moto\" creata correttamente.");
-                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }
@@ -203,6 +201,65 @@ namespace DatabaseInstruction
             }
         }
 
+        public void AggiungiVendita(Veicolo v)
+        {
+            if (connStr != null)
+            {
+                OleDbConnection con = new OleDbConnection(connStr);
+                using (con)
+                {
+                    con.Open();
+                    OleDbCommand cmd = new OleDbCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "INSERT INTO Report_Vendite(Targa, Marca, Modello, Colore, Cilindrata, Potenza, Immatricolazione, Usato, Km0, KmPercorsi, MarcaSella, NumAirbag, Prezzo, Tipo)" +
+                            " VALUES(@Targa, @Marca, @Modello, @Colore, @Cilindrata, @Potenza, @Immatricolazione, @Usato, @Km0, @KmPercorsi, @MarcaSella, @NumAirbag, @Prezzo, @Tipo);";
+
+                    //Sostituzione parametri
+                    cmd.Parameters.Add(new OleDbParameter("@Targa", OleDbType.VarChar, 255)).Value = v.Targa;
+                    cmd.Parameters.Add(new OleDbParameter("@Marca", OleDbType.VarChar, 255)).Value = v.Marca;
+                    cmd.Parameters.Add(new OleDbParameter("@Modello", OleDbType.VarChar, 255)).Value = v.Modello;
+                    cmd.Parameters.Add(new OleDbParameter("@Colore", OleDbType.VarChar, 255)).Value = v.Colore;
+                    cmd.Parameters.Add("@Cilindrata", OleDbType.Double).Value = v.Cilindrata;
+                    cmd.Parameters.Add("@Potenza", OleDbType.Double).Value = v.PotenzaKw;
+                    cmd.Parameters.Add("@Immatricolazione", OleDbType.Date).Value = v.Immatricolazione;
+                    cmd.Parameters.Add("@Usato", OleDbType.Boolean).Value = v.IsUsato;
+                    cmd.Parameters.Add("@Km0", OleDbType.Boolean).Value = v.IsKmZero;
+                    cmd.Parameters.Add("@KmPercorsi", OleDbType.Double).Value = v.KmPercorsi;
+                    if (v is Moto)
+                    {
+                        cmd.Parameters.Add(new OleDbParameter("@MarcaSella", OleDbType.VarChar, 255)).Value = (v as Moto).MarcaSella;
+                        cmd.Parameters.Add("@NumAirbag", OleDbType.Integer).Value = 0;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add(new OleDbParameter("@MarcaSella", OleDbType.VarChar, 255)).Value = "-";
+                        cmd.Parameters.Add("@NumAirbag", OleDbType.Integer).Value = (v as Automobili).NumAirbag;
+                    }
+                    cmd.Parameters.Add("@Prezzo", OleDbType.Double).Value = v.Prezzo;
+                    if (v is Moto)
+                    {
+                        cmd.Parameters.Add(new OleDbParameter("@Tipo", OleDbType.VarChar, 255)).Value = "Moto";
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add(new OleDbParameter("@Tipo", OleDbType.VarChar, 255)).Value = "Automobili";
+                    }
+
+                    cmd.Prepare();
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (OleDbException exc)
+                    {
+                        Error(exc);
+                        return;
+                    }
+                }
+            }
+        }
+
         #region dropTable
 
         /// <summary>
@@ -255,7 +312,6 @@ namespace DatabaseInstruction
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                         Console.WriteLine($"\nTabella \"{tableName}\" cancellata.");
-                        System.Threading.Thread.Sleep(3000);
                     }
                     catch (OleDbException exc)
                     {
@@ -336,13 +392,13 @@ namespace DatabaseInstruction
             }
         }
 
-        #endregion listTable
+		#endregion listTable
 
-        /// <summary>
-        /// Metodo di modifica dei dati.
-        /// </summary>
-        /// <param name="query">Stringa che contiene il comando sql per modificare i dati.</param>
-        public void ModificaDati(string query)
+		/// <summary>
+		/// Metodo di modifica dei dati.
+		/// </summary>
+		/// <param name="query">Stringa che contiene il comando sql per modificare i dati.</param>
+		public void ModificaDati(string query)
         {
             if (connStr != null)
             {
@@ -526,8 +582,7 @@ namespace DatabaseInstruction
         /// <param name="exc">Variabile contenente l'errore.</param>
         private static void Error(OleDbException exc)
         {
-            Console.WriteLine($"\n{exc.Message}\nPremi un tasto qualsiasi per continuare.");
-            System.Threading.Thread.Sleep(3000);
+            Console.WriteLine($"\n{exc.Message}\n");
         }
     }
 }

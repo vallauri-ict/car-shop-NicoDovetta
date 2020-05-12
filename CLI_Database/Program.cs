@@ -156,18 +156,24 @@ namespace ConsoleAppProject
             {
                 case '1':
                     u.CreateTableCars();
+                    System.Threading.Thread.Sleep(2000);
                     break;
                 case '2':
                     u.CreateTableMoto();
+                    System.Threading.Thread.Sleep(2000);
                     break;
                 case '3':
                     u.CreateTableReport();
+                    System.Threading.Thread.Sleep(2000);
                     break;
                 case '4':
                     {
                         u.CreateTableCars();
+                        System.Threading.Thread.Sleep(2000);
                         u.CreateTableMoto();
+                        System.Threading.Thread.Sleep(2000);
                         u.CreateTableReport();
+                        System.Threading.Thread.Sleep(2000);
                         break;
                     }
                 default:
@@ -526,6 +532,7 @@ namespace ConsoleAppProject
                                 list.Remove(item);
                             }
                         }
+                        System.Threading.Thread.Sleep(3000);
                         break;
                     }
                 case '2':
@@ -538,16 +545,21 @@ namespace ConsoleAppProject
                                 list.Remove(item);
                             }
                         }
+                        System.Threading.Thread.Sleep(3000);
                         break;
                     }
                 case '3':
                     u.DropReport();
+                    System.Threading.Thread.Sleep(3000);
                     break;
                 case '4':
                     {
                         u.DropAutomobili();
+                        System.Threading.Thread.Sleep(3000);
                         u.DropMoto();
+                        System.Threading.Thread.Sleep(3000);
                         u.DropReport();
+                        System.Threading.Thread.Sleep(3000);
                         list.Clear();
                         break;
                     }
@@ -572,6 +584,8 @@ namespace ConsoleAppProject
                 string resources = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi";
                 string DbPath = Path.Combine(resources, CLI_Database.Properties.Resources.CreateDB_Name);
                 File.Copy(DbPath, Program.DbPath);
+                Console.WriteLine("\nDatabase creato correttamente.");
+                System.Threading.Thread.Sleep(2000);
             }
             catch (Exception exc)
             {
@@ -603,7 +617,7 @@ namespace ConsoleAppProject
                     doneAuto = false;
                     doneMoto = false;
                     list.Clear();
-                    Console.WriteLine("Database cancellato correttamente.");
+                    Console.WriteLine("\nDatabase cancellato correttamente.");
                     System.Threading.Thread.Sleep(3000);
                 }
                 catch (Exception exc)
@@ -626,6 +640,8 @@ namespace ConsoleAppProject
                 File.Delete(backup);
             }
             File.Copy(DbPath, backup);
+            Console.WriteLine("Copia di backup effettuata.");
+            System.Threading.Thread.Sleep(3000);
         }
 
         /// <summary>

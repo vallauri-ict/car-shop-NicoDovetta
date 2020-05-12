@@ -7,6 +7,11 @@ using System.Windows.Forms;
 using veicoliDLLProject;
 
 //Esterni
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Collections.Generic;
+using DatabaseInstruction;
 
 #endregion Riferimenti
 
@@ -60,7 +65,14 @@ namespace WindowsFormsAppProject
 			txtModello.Text = veicolo.Modello;
 			txtTarga.Text = veicolo.Targa;
 			txtCilindrata.Text = veicolo.Cilindrata.ToString();
-			txtColore.BackColor = Color.FromName(veicolo.Colore);
+			try
+			{
+				txtColore.BackColor = System.Drawing.Color.FromName(veicolo.Colore);
+			}
+			catch (Exception)
+			{
+				MessageBox.Show("Impossibile impostare il colore per la visualizzaione. Solitamente il problema è dovuto a colori con sfumature.", "Autosalone Nico");
+			}
 			colore = veicolo.Colore;
 			dtpImmatricolazione.Value = veicolo.Immatricolazione;
 			txtPotenza.Text = veicolo.PotenzaKw.ToString();
@@ -240,7 +252,101 @@ namespace WindowsFormsAppProject
 
 		private void btnVendi_Click(object sender, EventArgs e)
 		{
+			string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi";//Percorso della cartella "resources".
+			string DbPath = Path.Combine(resourcesDirectoryPath, Properties.Resources.DB_Name);//Percorso del file contenente il database.
+			string connStr = $"Provider=Microsoft.Ace.Oledb.12.0;Data Source={DbPath};";//Stringa di connessione completa al database access.
+			UtilsDb udDb = new UtilsDb(connStr);
+			if (udDb.PresTabella("Report_Vendite"))
+			{
+				try
+				{
+					string filepath = Utils.OutputFileName(Utils.SelectPath(fbd), "docx");
 
+					using (WordprocessingDocument doc = WordprocessingDocument.Create(filepath, WordprocessingDocumentType.Document))
+					{
+						//Aggiunge la parte principale del documento.
+						MainDocumentPart mainPart = doc.AddMainDocumentPart();
+
+						//Crea la struttura principale del documento.
+						mainPart.Document = new Document();
+						Body body = mainPart.Document.AppendChild(new Body());
+
+						//Definizione di alcuni stili per il testo.
+						WordUtilities.AddStyle(mainPart, false, false, false, false, "Head1", "Titolone", "Calibri Light", 30, "000000");
+						WordUtilities.AddStyle(mainPart, false, false, false, false, "Main1", "Calibri", "Calibri", 10, "000000");
+
+						//Aggiunge il titolo con lo stile "Head1".
+						Paragraph headingPar = WordUtilities.CreateParagraphWithStyle("Head1", JustificationValues.Center);
+						WordUtilities.AddTextToParagraph(headingPar, $"Fattura per il veicolo: {veicolo.Targa}");
+						body.AppendChild(headingPar);
+
+						//Aggiunge del testo
+						Paragraph para = body.AppendChild(new Paragraph());
+						Run run = para.AppendChild(new Run());
+						// String msg contains the text, "Hello, Word!"
+						run.AppendChild(new Text($"Busca, {DateTime.Today.ToShortDateString()}"));
+
+						//Aggiunta dello stile "Main" e del corpo del documento.
+						Paragraph typescriptParagraph = WordUtilities.CreateParagraphWithStyle("Main1", JustificationValues.Distribute);
+						WordUtilities.AddTextToParagraph(typescriptParagraph, $"Con il presente documento si sottoscrive il cambio di proprietà per il veicolo targato {veicolo.Targa}, immatricolato il {veicolo.Immatricolazione.ToShortDateString()}" +
+							$" da Autosalone Nico a #nome_Compratore# in data {(DateTime.Today).ToShortDateString()} presso la sede legale di Autosalone Nico.");
+						body.AppendChild(typescriptParagraph);
+
+						//Aggiunta della tabella
+						bool[] bolds = { false, false, false, false, false, false, false, false, false, false, false, false };
+						bool[] italics = { false, false, false, false, false, false, false, false, false, false, false, false };
+						bool[] underlines = { false, false, false, false, false, false, false, false, false, false, false, false };
+						string aus;
+						if (veicolo.GetType().ToString().Contains("Moto"))
+						{
+							aus = $"Marca£Modello£Colore£Cilindrata£Potenza£Marcasella£{veicolo.Marca}£{veicolo.Modello}£{veicolo.Colore}£{veicolo.Cilindrata}£{veicolo.PotenzaKw}£{(veicolo as Moto).MarcaSella}";
+						}
+						else
+						{
+							aus = $"Marca£Modello£Colore£Cilindrata£Potenza£Marcasella£{veicolo.Marca}£{veicolo.Modello}£{veicolo.Colore}£{veicolo.Cilindrata}£{veicolo.PotenzaKw}£{(veicolo as Automobili).NumAirbag}";
+						}
+						string[] texts1 = aus.Split('£');
+						JustificationValues[] justifications = { JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left, JustificationValues.Left };
+						Table myTable = WordUtilities.createTable(mainPart, bolds, italics, underlines, texts1, justifications, 2, 6, "000000");
+						body.Append(myTable);
+						WordUtilities.InsertPicture(doc, veicolo.ImgPath);
+
+						/*
+						//Lista a pallini.
+						string[] texts2 = { "First element", "Second Element", "Third Element" };
+						WordUtilities.CreateBulletNumberingPart(mainPart);
+						List<Paragraph> bulletList = new List<Paragraph>();
+						WordUtilities.CreateBulletOrNumberedList(100, 200, bulletList, texts2.Length, texts2);
+						foreach (Paragraph paragraph in bulletList)
+							body.Append(paragraph);
+
+						//Lista con i numeri.
+						List<Paragraph> numberedList = new List<Paragraph>();
+						WordUtilities.CreateBulletOrNumberedList(100, 240, numberedList, texts2.Length, texts2, false);
+						foreach (Paragraph paragraph in numberedList)
+							body.Append(paragraph);
+						*/
+						//Aggiunta immagine.
+					}
+					Utils.ProcedureCompleted("Il documento è pronto!", filepath);
+
+					//Aggiunta del veicolo alla tabella 'Report_Ventite' ed eliminazione di esso dalla lista.
+					if (udDb.PresTabella("Report_Vendite"))
+					{
+						udDb.AggiungiVendita(veicolo);
+						listVeicoli.Remove(veicolo);
+					}
+					Close();
+				}
+				catch (Exception)
+				{
+					MessageBox.Show("Problemi con il documento. Se è aperto da un altro programma, chiudilo e riprova.","Autosalone Nico");
+				}
+			}
+			else
+			{
+				MessageBox.Show("Impossibile effettuare la vendita. Contattare l'amministratore del database.","Autosalone Nico");
+			}
 		}
 	}
 }
