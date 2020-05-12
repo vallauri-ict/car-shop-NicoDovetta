@@ -15,7 +15,7 @@ namespace ConsoleAppProject
     {
         #region dbPathSetting
 
-        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";//Percorso della cartella "resources".
+        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi";//Percorso della cartella "resources".
         private static string DbPath = Path.Combine(resourcesDirectoryPath, CLI_Database.Properties.Resources.DB_Name);//Percorso del file contenente il database.
         private static string connStr = $"Provider=Microsoft.Ace.Oledb.12.0;Data Source={DbPath};";//Stringa di connessione completa al database access.
 
@@ -24,7 +24,8 @@ namespace ConsoleAppProject
         #region globalVariables
 
         private static UtilsDb u;//Oggetto definito dalla classe UtilsDb.cs per evitare di avere più modificatori contemporanei al database.
-        private static bool done = false;//Controlla se bisogna caricare/ricaricare i veicoli all'interno della lista dei veicoli.
+        private static bool doneAuto = false;//Controlla se bisogna caricare/ricaricare i veicoli all'interno della lista dei veicoli.
+        private static bool doneMoto = false;//Controlla se bisogna caricare/ricaricare i veicoli all'interno della lista dei veicoli.
         private static SerialBindList<Veicolo> list = new SerialBindList<Veicolo>();//Lista dei veicoli.
 
         #endregion globalVariables
@@ -38,26 +39,33 @@ namespace ConsoleAppProject
             Console.Title = "SALONE VENDITA VEICOLI NUOVI E USATI - Gestionale database";
             if (File.Exists(DbPath))
             {
-                if (!done)
+                /*
+                    * Se bisogna ricaricare la lista dei veicoli lo si fa prima della creazione del menù.
+                    * Lo si fa dopo l'aggiunta di un veicolo, la modifica di un veicolo.
+                    */
+                if (u.PresTabella("Automobili") && !doneAuto)
                 {
-                    /*
-                     * Se bisogna ricaricare la lista dei veicoli lo si fa prima della creazione del menù.
-                     * Lo si fa dopo l'aggiunta di un veicolo, la modifica di un veicolo.
-                     */
-                    u.GetVeicolList(ref list);
-                    done = true;
+                    u.GetVeicolListAuto(ref list);
+                    doneAuto = true;
+                }
+                if (!doneMoto && u.PresTabella("Moto"))
+                {
+                    u.GetVeicolListMoto(ref list);
+                    doneAuto = true;
                 }
                 Console.WriteLine("1 - CREATE TABLE;");
                 Console.WriteLine("2 - ADD NEW ITEM;");
                 Console.WriteLine("3 - LIST ALL;");
-                Console.WriteLine("4 - Modifica veicolo;");
-                Console.WriteLine("D - DROP TABLE;");
+                Console.WriteLine("4 - MODIFICA VEICOLO;");
+                Console.WriteLine("5 - DROP TABLE;");
+                Console.WriteLine("B - CREA BACKUP;");
                 Console.WriteLine("C - CREA DATABASE;");
-                Console.WriteLine("B - DROP DATABASE;");
+                Console.WriteLine("D - DROP DATABASE;");
             }
             else
             {
                 Console.WriteLine("C - CREA DATABASE;");
+                Console.WriteLine("B - CARICA BACKUP;");
             }
             Console.WriteLine("\nX - FINE LAVORO\n");
         }
@@ -91,14 +99,17 @@ namespace ConsoleAppProject
                         case '4':
                             modify();
                             break;
-                        case 'd':
+                        case '5':
                             cancellaTabella();
                             break;
                         case 'c':
                             creaDatabase();
                             break;
-                        case 'b':
+                        case 'd':
                             dropDatabase();
+                            break;
+                        case 'b':
+                            creaBackup();
                             break;
                         default:
                             break;
@@ -110,6 +121,9 @@ namespace ConsoleAppProject
                     {
                         case 'c':
                             creaDatabase();
+                            break;
+                        case 'b':
+                            caricaBckup();
                             break;
                         default:
                             break;
@@ -201,13 +215,13 @@ namespace ConsoleAppProject
                                     a = new Automobili(param[0], param[1], param[2], param[3], Convert.ToInt32(param[4]), Convert.ToDouble(param[5]), Convert.ToDateTime(param[6]), Convert.ToBoolean(param[7]), Convert.ToBoolean(param[8]), f, Convert.ToInt32(param[10]), Convert.ToDouble(param[11]));
                                 }
                                 u.AddNewVeicol(a);
-                                done = false;
+                                doneAuto = false;
                             }
                             catch (Exception exc)
                             {
                                 Console.WriteLine($"\n{exc.Message}\nPremere un tasto per continuare.");
                                 Console.ReadKey();
-                                done = true;
+                                doneAuto = true;
                                 return;
                             }
                         }
@@ -240,13 +254,13 @@ namespace ConsoleAppProject
                                     m = new Moto(param[0], param[1], param[2], param[3], Convert.ToInt32(param[4]), Convert.ToDouble(param[5]), Convert.ToDateTime(param[6]), Convert.ToBoolean(param[7]), Convert.ToBoolean(param[8]), f, param[10], Convert.ToDouble(param[11]));
                                 }
                                 u.AddNewVeicol(m);
-                                done = false;
+                                doneMoto = false;
                             }
                             catch (Exception exc)
                             {
                                 Console.WriteLine($"\n{exc.Message}");
                                 Console.ReadKey();
-                                done = true;
+                                doneMoto = true;
                                 return;
                             }
                         }
@@ -313,7 +327,6 @@ namespace ConsoleAppProject
                 if (query != "x")
                 {
                     u.ModificaDati(query);
-                    done = false;
                 }
                 else
                 {
@@ -418,6 +431,7 @@ namespace ConsoleAppProject
                         ins = Console.ReadLine();
                         if (ins != "")
                             aus += $"Marcasella = '{ins}',";
+                        doneMoto = false;
                     }
                     else
                     {
@@ -425,12 +439,13 @@ namespace ConsoleAppProject
                         ins = Console.ReadLine();
                         if (ins != "")
                             aus += $"NumAirbag = {Convert.ToInt32(ins)},";
+                        doneAuto = false;
                     }
 
                     Console.Write("Inserisci il nuovo percorso dell'immagine (invio per non modificare): ");
                     ins = Console.ReadLine();
                     if (ins != "")
-                        aus += $"imgPath = '{ins}'";
+                        aus += $"imgPath = '{ins}',";
 
                     if (aus.Length > 22)
                     {
@@ -545,7 +560,7 @@ namespace ConsoleAppProject
             Console.Clear();
             try
             {
-                string resources = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";
+                string resources = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi";
                 string DbPath = Path.Combine(resources, CLI_Database.Properties.Resources.CreateDB_Name);
                 File.Copy(DbPath, Program.DbPath);
             }
@@ -576,7 +591,8 @@ namespace ConsoleAppProject
                 try
                 {
                     File.Delete(DbPath);
-                    done = false;
+                    doneAuto = false;
+                    doneMoto = false;
                     list.Clear();
                     Console.WriteLine("Database cancellato correttamente.");
                     System.Threading.Thread.Sleep(3000);
@@ -585,6 +601,41 @@ namespace ConsoleAppProject
                 {
                     Console.WriteLine($"\n{exc.Message}\nPremi un tasto per continuare.");
                     Console.ReadKey();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copia il database e lo rinomina per crearne una copia di backup.
+        /// </summary>
+        private static void creaBackup()
+        {
+            string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi\\Backup";//Percorso della cartella "resources".
+            string backup = Path.Combine(resourcesDirectoryPath, "backup.accdb");//Percorso del file contenente il database.
+            if (File.Exists(backup))
+            {
+                File.Delete(backup);
+            }
+            File.Copy(DbPath, backup);
+        }
+
+        /// <summary>
+        /// Prende il file "backup.accdb" e lo copia cambianogli il nome in "autoSalone.accdb"
+        /// </summary>
+        private static void caricaBckup()
+        {
+            string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi\\Backup";//Percorso della cartella "resources".
+            string backup = Path.Combine(resourcesDirectoryPath, "backup.accdb");//Percorso del file contenente il database.
+            if (File.Exists(backup))
+            {
+                File.Copy(backup, DbPath);
+            }
+            else
+            {
+                Console.WriteLine("Nessun Backup trovato. Creare il database?(s/n)");
+                if (Console.ReadKey().KeyChar == 's')
+                {
+                    creaDatabase();
                 }
             }
         }

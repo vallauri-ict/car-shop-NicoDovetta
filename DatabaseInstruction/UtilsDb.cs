@@ -118,12 +118,12 @@ namespace DatabaseInstruction
 
                     try
                     {
-                        cmd.CommandText = @"CREATE TABLE Report_Vendite(Targa VARCHAR(255) identity(1,1) NOT NULL PRIMARY KEY, Tipo VARCHAR(255)," +
+                        cmd.CommandText = @"CREATE TABLE Report_Vendite(Targa VARCHAR(255) identity(1,1) NOT NULL PRIMARY KEY," +
                             "Marca VARCHAR(255), Modello VARCHAR(255)," +
                             "Colore VARCHAR(255), Cilindrata double," +
                             "Potenza double, Immatricolazione VARCHAR(255)," +
                             "Usato bit, Km0 bit," +
-                            "KmPercorsi double, MarcaSella VARCHAR(255), NumAirbag int, Prezzo double);";
+                            "KmPercorsi double, MarcaSella VARCHAR(255), NumAirbag int, Prezzo double, Tipo VARCHAR(255));";
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                     }
@@ -368,23 +368,25 @@ namespace DatabaseInstruction
             }
         }
 
+        #region GetVeicoli
+
         /// <summary>
-        /// Prende dal database tutti i veicoli appartenenti alle tabelle "Moto" e "Automobili" e gli restituisce in una lista.
+        /// Prende dal database tutti i veicoli appartenenti alle tabella "Automobili" e gli restituisce in una lista.
         /// </summary>
         /// <param name="list">Lista passata per referenza nella quale sono contenuti i veicoli.</param>
-        public void GetVeicolList(ref SerialBindList<Veicolo> list)
+        public void GetVeicolListAuto(ref SerialBindList<Veicolo> list)
         {
             if (connStr != null)
             {
                 OleDbConnection con = new OleDbConnection(connStr);
                 using (con)
                 {
-                    con.Open();
                     try
                     {
+                        con.Open();
+
                         OleDbCommand cmd = new OleDbCommand("SELECT * FROM Automobili;", con);
                         OleDbDataReader reader = cmd.ExecuteReader();
-                        Console.Clear();
                         if (reader.HasRows)
                         {
                             while (reader.Read())
@@ -401,11 +403,28 @@ namespace DatabaseInstruction
                         Error(exc);
                         return;
                     }
+                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prende dal database tutti i veicoli appartenenti alle tabella "Moto" e gli restituisce in una lista.
+        /// </summary>
+        /// <param name="list">Lista passata per referenza nella quale sono contenuti i veicoli.</param>
+        public void GetVeicolListMoto(ref SerialBindList<Veicolo> list)
+        {
+            if (connStr != null)
+            {
+                OleDbConnection con = new OleDbConnection(connStr);
+                using (con)
+                {
                     try
                     {
+                        con.Open();
+
                         OleDbCommand cmd = new OleDbCommand("SELECT * FROM Moto;", con);
                         OleDbDataReader reader = cmd.ExecuteReader();
-                        Console.Clear();
                         if (reader.HasRows)
                         {
                             while (reader.Read())
@@ -427,14 +446,90 @@ namespace DatabaseInstruction
         }
 
         /// <summary>
+        /// Prende dal database tutti i veicoli appartenenti alle tabella "Report_Vendite" e gli restituisce in una lista.
+        /// </summary>
+        /// <param name="list">Lista passata per referenza nella quale sono contenuti i veicoli.</param>
+        public void GetVeicolListReport(ref SerialBindList<Veicolo> list)
+        {
+            if (connStr != null)
+            {
+                OleDbConnection con = new OleDbConnection(connStr);
+                using (con)
+                {
+                    try
+                    {
+                        con.Open();
+
+                        OleDbCommand cmd = new OleDbCommand("SELECT * FROM Report_Vendite;", con);
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                float f;
+                                float.TryParse(reader[9].ToString(), out f);
+                                if (reader[13].ToString() == "Moto")
+                                {
+                                    list.Add(new Moto(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), Convert.ToDouble(reader[4].ToString()), Convert.ToDouble(reader[5].ToString()), Convert.ToDateTime(reader[6].ToString()), Convert.ToBoolean(reader[7].ToString()), Convert.ToBoolean(reader[8].ToString()), f, reader[10].ToString(), Convert.ToDouble(reader[11].ToString()), reader[12].ToString()));
+                                }
+                                else
+                                {
+                                    list.Add(new Automobili(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), Convert.ToDouble(reader[4].ToString()), Convert.ToDouble(reader[5].ToString()), Convert.ToDateTime(reader[6].ToString()), Convert.ToBoolean(reader[7].ToString()), Convert.ToBoolean(reader[8].ToString()), f, Convert.ToInt32(reader[10].ToString()), Convert.ToDouble(reader[11].ToString()), reader[12].ToString()));
+                                }
+                            }
+                            reader.Close();
+                        }
+                    }
+                    catch (OleDbException exc)
+                    {
+                        Error(exc);
+                        return;
+                    }
+                }
+            }
+        }
+
+        #endregion GetVeicoli
+
+        /// <summary>
+        /// Per evitare di andare a fare delle query a una tabella inesistente controllo che esista.
+        /// </summary>
+        /// <param name="tableName">Nome della tabella da verificare.</param>
+        /// <returns>True se esiste la tabella false se non esiste.</returns>
+        public bool PresTabella(string tableName)
+        {
+            if (connStr != null)
+            {
+                OleDbConnection con = new OleDbConnection(connStr);
+                using (con)
+                {
+                    con.Open();
+                    try
+                    {
+                        OleDbCommand cmd = new OleDbCommand($"SELECT * FROM {tableName};", con);
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Procedura standard di gestione dell'errore su un'istruzione al database.
         /// </summary>
         /// <param name="exc">Variabile contenente l'errore.</param>
         private static void Error(OleDbException exc)
         {
-            Console.Clear();
             Console.WriteLine($"\n{exc.Message}\nPremi un tasto qualsiasi per continuare.");
-            Console.ReadKey();
+            System.Threading.Thread.Sleep(3000);
         }
     }
 }

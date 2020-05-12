@@ -68,5 +68,23 @@ namespace WindowsFormsAppProject.Properties {
                 return ResourceManager.GetString("DB_Name", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Veicoli.json.
+        /// </summary>
+        internal static string JSON_Save {
+            get {
+                return ResourceManager.GetString("JSON_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a noPhoto.jpg.
+        /// </summary>
+        internal static string NO_Img {
+            get {
+                return ResourceManager.GetString("NO_Img", resourceCulture);
+            }
+        }
     }
 }
