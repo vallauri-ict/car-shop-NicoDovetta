@@ -55,15 +55,16 @@ namespace WindowsFormsAppProject
                 }
                 if (dbManagement.PresTabella("Moto"))
                 {
-                    dbManagement.GetVeicolListAuto(ref listaVeicoli);
+                    dbManagement.GetVeicolListMoto(ref listaVeicoli);
                 }
                 cmbVisual.SelectedIndex = 0;
-                Utils.visualNew(dgvVisual, listaVeicoli, cmbVisual.SelectedIndex);
+                //Utils.visualNew(dgvVisual, listaVeicoli, cmbVisual.SelectedIndex);
             }
             else
             {
                 MessageBox.Show("Impossibile trovare il database. Contattare l'amministratore.", "Autosalone Nico");
                 Utils.loadData(listaVeicoli);
+                cmbVisual.SelectedIndex = 0;
             }
         }
 

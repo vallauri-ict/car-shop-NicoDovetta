@@ -58,7 +58,7 @@ namespace veicoliDLLProject
         /// <returns>La stringa base + alcune variabili private e univocehe di Moto</returns>
         public override string ToString()
         {
-            return $"Moto: {base.ToString()} - Sella {this.MarcaSella}";
+            return $"{this.Targa}£{this.Marca}£{this.Modello}£{this.Colore}£{this.Cilindrata.ToString()}£{this.PotenzaKw.ToString()}£{this.Immatricolazione.ToShortDateString()}£{(this.IsUsato ? "Sì" : "No")}£{(this.IsKmZero ? "Sì" : "No")}£{this.KmPercorsi}£{this.MarcaSella}£€ {this.Prezzo}";
         }
 
         #endregion Override

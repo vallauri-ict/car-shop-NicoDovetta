@@ -58,7 +58,7 @@ namespace veicoliDLLProject
         /// <returns>Base + variabili selezionate e univoche delle automobili</returns>
         public override string ToString()
         {
-            return $"Auto: {base.ToString()} - {this.NumAirbag} Airbag";
+            return $"{this.Targa}£{this.Marca}£{this.Modello}£{this.Colore}£{this.Cilindrata.ToString()}£{this.PotenzaKw.ToString()}£{this.Immatricolazione.ToShortDateString()}£{(this.IsUsato ? "Sì": "No")}£{(this.IsKmZero ? "Sì":"No")}£{this.KmPercorsi}£{this.NumAirbag}£€ {this.Prezzo}";
         }
 
         #endregion OverrideOfAutomobili
