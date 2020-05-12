@@ -58,7 +58,7 @@ namespace DatabaseInstruction
                     }
 
                     Console.WriteLine("\nTabella \"Automobili\" creata correttamente.");
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace DatabaseInstruction
                     }
 
                     Console.WriteLine("\nTabella \"Moto\" creata correttamente.");
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace DatabaseInstruction
                     }
 
                     Console.WriteLine("\nTabella \"Report_Vendite\" creata correttamente.");
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }
@@ -199,8 +199,6 @@ namespace DatabaseInstruction
                         Error(exc);
                         return;
                     }
-                    Console.WriteLine("\nVeicolo inserito correttamente.");
-                    System.Threading.Thread.Sleep(2000);
                 }
             }
         }

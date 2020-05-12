@@ -28,14 +28,16 @@ namespace veicoliDLLProject
         private static string imgDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\img";//Percorso della cartella "resources".
         private static string noImgPath = Path.Combine(imgDirectoryPath, Properties.Resources.NO_Img);//Percorso del file contenente il database.
 
-        #endregion pathVariables
+		#endregion pathVariables
 
-        /// <summary>
-        /// Crea dei dati statici per effettuare un test delle funzionalità.
-        /// Aggiornato: 14/12/2019.
-        /// </summary>
-        /// <where>Main riga:35</where>
-        public static void caricaDatiDiTest(SerialBindList<Veicolo> listaVeicoli)
+		#region salvataggi
+
+		/// <summary>
+		/// Crea dei dati statici per effettuare un test delle funzionalità.
+		/// Aggiornato: 14/12/2019.
+		/// </summary>
+		/// <where>Main riga:35</where>
+		public static void caricaDatiDiTest(SerialBindList<Veicolo> listaVeicoli)
         {
             Moto m = new Moto("exp0", "Honda", "Tsunami", "Rosso", 1000, 120, DateTime.Now, false, false, 0, "Quintino", 1035);
             listaVeicoli.Add(m);
@@ -62,6 +64,7 @@ namespace veicoliDLLProject
                         break;
                 }
             }
+            /*
             else
             {
                 DialogResult result = MessageBox.Show("Carcare dati di test?", "Autosalone Nico", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -77,6 +80,7 @@ namespace veicoliDLLProject
                         break;
                 }
             }
+            */
         }
 
         /// <summary>
@@ -105,6 +109,10 @@ namespace veicoliDLLProject
                 }
             }
         }
+
+        #endregion salvataggi
+
+        #region formatojson
 
         /// <summary>
         /// Con qualunque tipo crea un file di estensione ".json" con tutte le variabili. Se usato più volte, con lo stesso path, sovrascrive il file.
@@ -144,13 +152,17 @@ namespace veicoliDLLProject
             }
         }
 
-        /// <summary>
-        /// Richiamato tutte le volte che devo cambiare i veicoli all'interno della dgv.
-        /// </summary>
-        /// <param name="dgv">Elemento della form dove carico i dati.</param>
-        /// <param name="listaVeicoli">Lista che contiene i veicoli.</param>
-        /// <param name="visual">Campo che mi indica quale tipo di veicolo devo inserire nella form.</param>
-        public static void visualNew(DataGridView dgv, SerialBindList<Veicolo> listaVeicoli, int visual)
+		#endregion formatojson
+
+		#region visualizza
+
+		/// <summary>
+		/// Richiamato tutte le volte che devo cambiare i veicoli all'interno della dgv.
+		/// </summary>
+		/// <param name="dgv">Elemento della form dove carico i dati.</param>
+		/// <param name="listaVeicoli">Lista che contiene i veicoli.</param>
+		/// <param name="visual">Campo che mi indica quale tipo di veicolo devo inserire nella form.</param>
+		public static void visualNew(DataGridView dgv, SerialBindList<Veicolo> listaVeicoli, int visual)
         {
             settaDgv(dgv, visual);
             foreach (Veicolo item in listaVeicoli)
@@ -170,6 +182,7 @@ namespace veicoliDLLProject
                     }
                 }
             }
+            dgv.ClearSelection();
         }
 
         /// <summary>
@@ -181,6 +194,8 @@ namespace veicoliDLLProject
         {
             //Cancella tutte le righe che contengono dati della vecchia visualizzazione.
             dgv.Rows.Clear();
+            //Per evitare di avere delle grandezze diverse.
+            dgv.Columns.Clear();
 
             dgv.ColumnCount = 12;
             dgv.Columns[0].HeaderText = "Targa";
@@ -210,49 +225,30 @@ namespace veicoliDLLProject
             dgv.ClearSelection();
         }
 
-        /// <summary>
-        /// Crea una targa che possa funzionare da id e non vada in errore
-        /// </summary>
-        /// <param name="listaVeicoli">Per selezionare l'ultima targa "non immatricolata"</param>
-        /// <returns></returns>
-        public static string makeTarga(SerialBindList<Veicolo> listaVeicoli)
+		#endregion visualizza
+
+		#region controlloTarga
+
+		/// <summary>
+		/// Crea una targa che possa funzionare da id e non vada in errore
+		/// </summary>
+		/// <param name="listaVeicoli">Per selezionare l'ultima targa "non immatricolata"</param>
+		/// <returns></returns>
+		public static string makeTarga(SerialBindList<Veicolo> listaVeicoli)
         {
             int numTarga = 0;
             foreach (Veicolo item in listaVeicoli)
             {
-                if (item.Targa.Contains("exp"))
+                if (item.Targa.Contains("EXP"))
                 {
-                    int aus = Convert.ToInt32(item.Targa.Substring(2));
+                    int aus = Convert.ToInt32(item.Targa.Substring(3));
                     if (aus > numTarga)
                     {
                         numTarga = aus;
                     }
                 }
             }
-            return $"exp{numTarga + 1}";
-        }
-
-        /// <summary>
-        /// Crea e avvia, con il browser predefinito, una pagina HTML con tutti i veicoli e alcune variabili; pronto per l'esportazione.
-        /// </summary>
-        /// <param name="listaVeicoli">Source dei veicoli</param>
-        /// <param name="pathName">Path destinazione di "index.html"</param>
-        /// <param name="skeletonPathName">Path del modello html</param>
-        public static void createHtml(BindingList<Veicolo> listaVeicoli, string pathName, string skeletonPathName = @".\www\pagine\index-skeleton.html")
-        {
-            string html = File.ReadAllText(skeletonPathName), nuovo = "", usato = "";
-            html = html.Replace("({head-title})", "AUTOSALONE NICO");
-            html = html.Replace("({body-title})", "AUTOSALONE NICO - VEICOLI NUOVI E USATI");
-            html = html.Replace("({body-subtitle})", "Le migliori occasioni al miglior prezzo");
-            foreach (Veicolo item in listaVeicoli)
-            {
-                if (!item.IsUsato)
-                {
-                    nuovo += $"<div style='background-image:url({item.ImgPath});'></div>";
-                }
-            }
-            html = html.Replace("c#_automatic_substitution;", (nuovo + usato));
-            File.WriteAllText(pathName, html);
+            return $"EXP{numTarga + 1}";
         }
 
         /// <summary>
@@ -282,6 +278,31 @@ namespace veicoliDLLProject
             {
                 return false;
             }
+        }
+
+		#endregion controlloTarga
+
+		/// <summary>
+		/// Crea e avvia, con il browser predefinito, una pagina HTML con tutti i veicoli e alcune variabili; pronto per l'esportazione.
+		/// </summary>
+		/// <param name="listaVeicoli">Source dei veicoli</param>
+		/// <param name="pathName">Path destinazione di "index.html"</param>
+		/// <param name="skeletonPathName">Path del modello html</param>
+		public static void createHtml(BindingList<Veicolo> listaVeicoli, string pathName)
+        {
+            string html = File.ReadAllText(pathName), nuovo = "", usato = "";
+            html = html.Replace("({head-title})", "AUTOSALONE NICO");
+            html = html.Replace("({body-title})", "AUTOSALONE NICO - VEICOLI NUOVI E USATI");
+            html = html.Replace("({body-subtitle})", "Le migliori occasioni al miglior prezzo");
+            foreach (Veicolo item in listaVeicoli)
+            {
+                if (!item.IsUsato)
+                {
+                    nuovo += $"<div style='background-image:url({item.ImgPath});'></div>";
+                }
+            }
+            html = html.Replace("c#_automatic_substitution;", (nuovo + usato));
+            File.WriteAllText(pathName, html);
         }
     }
 }

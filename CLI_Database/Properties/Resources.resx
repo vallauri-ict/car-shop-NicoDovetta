@@ -125,4 +125,8 @@
     <value>autoSalone.accdb</value>
     <comment>Nome del database access.</comment>
   </data>
+  <data name="JSON_Save" xml:space="preserve">
+    <value>Veicoli.json</value>
+    <comment>Salvataggio di backup nel caso non si trovasse il database.</comment>
+  </data>
 </root>

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddNewVeicolo));
             this.numKmPercorsi = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.numAirbag = new System.Windows.Forms.NumericUpDown();
@@ -61,6 +62,9 @@
             this.txtPrezzo = new System.Windows.Forms.TextBox();
             this.txtTarga = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.ofdImg = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.numKmPercorsi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAirbag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPotenza)).BeginInit();
@@ -77,19 +81,9 @@
             0,
             0,
             0});
-            this.numKmPercorsi.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.numKmPercorsi.Name = "numKmPercorsi";
             this.numKmPercorsi.Size = new System.Drawing.Size(44, 20);
-            this.numKmPercorsi.TabIndex = 49;
-            this.numKmPercorsi.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.numKmPercorsi.TabIndex = 12;
             // 
             // label7
             // 
@@ -97,7 +91,7 @@
             this.label7.Location = new System.Drawing.Point(9, 122);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(95, 13);
-            this.label7.TabIndex = 48;
+            this.label7.TabIndex = 0;
             this.label7.Text = "Chilometri percorsi:";
             // 
             // numAirbag
@@ -115,7 +109,7 @@
             0});
             this.numAirbag.Name = "numAirbag";
             this.numAirbag.Size = new System.Drawing.Size(33, 20);
-            this.numAirbag.TabIndex = 43;
+            this.numAirbag.TabIndex = 15;
             this.numAirbag.Value = new decimal(new int[] {
             2,
             0,
@@ -128,7 +122,7 @@
             this.lblNAirbag.Location = new System.Drawing.Point(312, 122);
             this.lblNAirbag.Name = "lblNAirbag";
             this.lblNAirbag.Size = new System.Drawing.Size(80, 13);
-            this.lblNAirbag.TabIndex = 42;
+            this.lblNAirbag.TabIndex = 14;
             this.lblNAirbag.Text = "Numero Airbag:";
             // 
             // txtMarcaSella
@@ -136,7 +130,7 @@
             this.txtMarcaSella.Location = new System.Drawing.Point(378, 120);
             this.txtMarcaSella.Name = "txtMarcaSella";
             this.txtMarcaSella.Size = new System.Drawing.Size(100, 20);
-            this.txtMarcaSella.TabIndex = 45;
+            this.txtMarcaSella.TabIndex = 15;
             // 
             // lblMarcaSella
             // 
@@ -144,7 +138,7 @@
             this.lblMarcaSella.Location = new System.Drawing.Point(312, 123);
             this.lblMarcaSella.Name = "lblMarcaSella";
             this.lblMarcaSella.Size = new System.Drawing.Size(64, 13);
-            this.lblMarcaSella.TabIndex = 44;
+            this.lblMarcaSella.TabIndex = 14;
             this.lblMarcaSella.Text = "Marca sella:";
             // 
             // dtpImmatricolazione
@@ -154,7 +148,7 @@
             this.dtpImmatricolazione.MaxDate = new System.DateTime(2019, 12, 13, 0, 0, 0, 0);
             this.dtpImmatricolazione.Name = "dtpImmatricolazione";
             this.dtpImmatricolazione.Size = new System.Drawing.Size(90, 20);
-            this.dtpImmatricolazione.TabIndex = 41;
+            this.dtpImmatricolazione.TabIndex = 4;
             this.dtpImmatricolazione.Value = new System.DateTime(2019, 12, 4, 0, 0, 0, 0);
             // 
             // label6
@@ -163,7 +157,7 @@
             this.label6.Location = new System.Drawing.Point(477, 43);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(88, 13);
-            this.label6.TabIndex = 40;
+            this.label6.TabIndex = 0;
             this.label6.Text = "Immatricolazione:";
             // 
             // numPotenza
@@ -173,7 +167,7 @@
             0,
             0,
             0});
-            this.numPotenza.Location = new System.Drawing.Point(175, 83);
+            this.numPotenza.Location = new System.Drawing.Point(175, 82);
             this.numPotenza.Maximum = new decimal(new int[] {
             500,
             0,
@@ -186,7 +180,7 @@
             0});
             this.numPotenza.Name = "numPotenza";
             this.numPotenza.Size = new System.Drawing.Size(40, 20);
-            this.numPotenza.TabIndex = 39;
+            this.numPotenza.TabIndex = 6;
             this.numPotenza.Value = new decimal(new int[] {
             10,
             0,
@@ -199,7 +193,7 @@
             this.label5.Location = new System.Drawing.Point(123, 85);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 13);
-            this.label5.TabIndex = 38;
+            this.label5.TabIndex = 0;
             this.label5.Text = "Potenza:";
             // 
             // numCilindrata
@@ -222,7 +216,7 @@
             0});
             this.numCilindrata.Name = "numCilindrata";
             this.numCilindrata.Size = new System.Drawing.Size(42, 20);
-            this.numCilindrata.TabIndex = 37;
+            this.numCilindrata.TabIndex = 5;
             this.numCilindrata.Value = new decimal(new int[] {
             50,
             0,
@@ -235,7 +229,7 @@
             this.label4.Location = new System.Drawing.Point(9, 84);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 13);
-            this.label4.TabIndex = 36;
+            this.label4.TabIndex = 0;
             this.label4.Text = "Cilindrata:";
             // 
             // label3
@@ -244,7 +238,7 @@
             this.label3.Location = new System.Drawing.Point(235, 85);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 13);
-            this.label3.TabIndex = 34;
+            this.label3.TabIndex = 0;
             this.label3.Text = "Colore:";
             // 
             // txtModello
@@ -252,7 +246,7 @@
             this.txtModello.Location = new System.Drawing.Point(288, 40);
             this.txtModello.Name = "txtModello";
             this.txtModello.Size = new System.Drawing.Size(153, 20);
-            this.txtModello.TabIndex = 33;
+            this.txtModello.TabIndex = 3;
             // 
             // label2
             // 
@@ -260,7 +254,7 @@
             this.label2.Location = new System.Drawing.Point(235, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 13);
-            this.label2.TabIndex = 32;
+            this.label2.TabIndex = 0;
             this.label2.Text = "Modello:";
             // 
             // txtMarca
@@ -268,7 +262,7 @@
             this.txtMarca.Location = new System.Drawing.Point(55, 40);
             this.txtMarca.Name = "txtMarca";
             this.txtMarca.Size = new System.Drawing.Size(152, 20);
-            this.txtMarca.TabIndex = 31;
+            this.txtMarca.TabIndex = 2;
             // 
             // label1
             // 
@@ -276,7 +270,7 @@
             this.label1.Location = new System.Drawing.Point(9, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 13);
-            this.label1.TabIndex = 30;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Marca:";
             // 
             // cmbTipoVeicolo
@@ -289,7 +283,7 @@
             this.cmbTipoVeicolo.Location = new System.Drawing.Point(238, 13);
             this.cmbTipoVeicolo.Name = "cmbTipoVeicolo";
             this.cmbTipoVeicolo.Size = new System.Drawing.Size(130, 21);
-            this.cmbTipoVeicolo.TabIndex = 29;
+            this.cmbTipoVeicolo.TabIndex = 1;
             this.cmbTipoVeicolo.SelectedIndexChanged += new System.EventHandler(this.cmbTipoVeicolo_SelectedIndexChanged);
             // 
             // btnColore
@@ -297,7 +291,7 @@
             this.btnColore.Location = new System.Drawing.Point(281, 83);
             this.btnColore.Name = "btnColore";
             this.btnColore.Size = new System.Drawing.Size(126, 20);
-            this.btnColore.TabIndex = 50;
+            this.btnColore.TabIndex = 7;
             this.btnColore.Text = "Scegli colore";
             this.btnColore.UseVisualStyleBackColor = true;
             this.btnColore.Click += new System.EventHandler(this.btnColore_Click);
@@ -309,7 +303,7 @@
             this.provaBackground.Name = "provaBackground";
             this.provaBackground.ReadOnly = true;
             this.provaBackground.Size = new System.Drawing.Size(33, 20);
-            this.provaBackground.TabIndex = 52;
+            this.provaBackground.TabIndex = 0;
             // 
             // rdbSiNuova
             // 
@@ -318,7 +312,7 @@
             this.rdbSiNuova.Location = new System.Drawing.Point(6, 11);
             this.rdbSiNuova.Name = "rdbSiNuova";
             this.rdbSiNuova.Size = new System.Drawing.Size(34, 17);
-            this.rdbSiNuova.TabIndex = 54;
+            this.rdbSiNuova.TabIndex = 8;
             this.rdbSiNuova.TabStop = true;
             this.rdbSiNuova.Text = "Si";
             this.rdbSiNuova.UseVisualStyleBackColor = true;
@@ -330,7 +324,7 @@
             this.grpNuova.Location = new System.Drawing.Point(456, 72);
             this.grpNuova.Name = "grpNuova";
             this.grpNuova.Size = new System.Drawing.Size(97, 34);
-            this.grpNuova.TabIndex = 55;
+            this.grpNuova.TabIndex = 0;
             this.grpNuova.TabStop = false;
             this.grpNuova.Text = "Nuova?";
             // 
@@ -340,7 +334,7 @@
             this.rdbNoNuova.Location = new System.Drawing.Point(57, 11);
             this.rdbNoNuova.Name = "rdbNoNuova";
             this.rdbNoNuova.Size = new System.Drawing.Size(39, 17);
-            this.rdbNoNuova.TabIndex = 55;
+            this.rdbNoNuova.TabIndex = 9;
             this.rdbNoNuova.Text = "No";
             this.rdbNoNuova.UseVisualStyleBackColor = true;
             this.rdbNoNuova.CheckedChanged += new System.EventHandler(this.rdbNoNuova_CheckedChanged);
@@ -353,7 +347,7 @@
             this.grpKm0.Location = new System.Drawing.Point(567, 72);
             this.grpKm0.Name = "grpKm0";
             this.grpKm0.Size = new System.Drawing.Size(97, 34);
-            this.grpKm0.TabIndex = 56;
+            this.grpKm0.TabIndex = 0;
             this.grpKm0.TabStop = false;
             this.grpKm0.Text = "Km0?";
             // 
@@ -364,7 +358,7 @@
             this.rdbNoKm0.Location = new System.Drawing.Point(57, 11);
             this.rdbNoKm0.Name = "rdbNoKm0";
             this.rdbNoKm0.Size = new System.Drawing.Size(39, 17);
-            this.rdbNoKm0.TabIndex = 55;
+            this.rdbNoKm0.TabIndex = 11;
             this.rdbNoKm0.TabStop = true;
             this.rdbNoKm0.Text = "No";
             this.rdbNoKm0.UseVisualStyleBackColor = true;
@@ -375,7 +369,7 @@
             this.rdbSiKm0.Location = new System.Drawing.Point(6, 11);
             this.rdbSiKm0.Name = "rdbSiKm0";
             this.rdbSiKm0.Size = new System.Drawing.Size(34, 17);
-            this.rdbSiKm0.TabIndex = 54;
+            this.rdbSiKm0.TabIndex = 10;
             this.rdbSiKm0.Text = "Si";
             this.rdbSiKm0.UseVisualStyleBackColor = true;
             // 
@@ -384,7 +378,7 @@
             this.btnAnnulla.Location = new System.Drawing.Point(12, 174);
             this.btnAnnulla.Name = "btnAnnulla";
             this.btnAnnulla.Size = new System.Drawing.Size(75, 23);
-            this.btnAnnulla.TabIndex = 57;
+            this.btnAnnulla.TabIndex = 18;
             this.btnAnnulla.Text = "Annulla";
             this.btnAnnulla.UseVisualStyleBackColor = true;
             this.btnAnnulla.Click += new System.EventHandler(this.btnAnnulla_Click);
@@ -394,7 +388,7 @@
             this.btnAggiungi.Location = new System.Drawing.Point(97, 174);
             this.btnAggiungi.Name = "btnAggiungi";
             this.btnAggiungi.Size = new System.Drawing.Size(75, 23);
-            this.btnAggiungi.TabIndex = 58;
+            this.btnAggiungi.TabIndex = 19;
             this.btnAggiungi.Text = "Aggiungi";
             this.btnAggiungi.UseVisualStyleBackColor = true;
             this.btnAggiungi.Click += new System.EventHandler(this.btnAggiungi_Click);
@@ -404,7 +398,7 @@
             this.btnImmagine.Location = new System.Drawing.Point(175, 119);
             this.btnImmagine.Name = "btnImmagine";
             this.btnImmagine.Size = new System.Drawing.Size(115, 20);
-            this.btnImmagine.TabIndex = 59;
+            this.btnImmagine.TabIndex = 13;
             this.btnImmagine.Text = "Carica immagine";
             this.btnImmagine.UseVisualStyleBackColor = true;
             this.btnImmagine.Click += new System.EventHandler(this.btnImmagine_Click);
@@ -415,7 +409,7 @@
             this.label8.Location = new System.Drawing.Point(505, 123);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(42, 13);
-            this.label8.TabIndex = 60;
+            this.label8.TabIndex = 0;
             this.label8.Text = "Prezzo:";
             // 
             // txtPrezzo
@@ -423,7 +417,7 @@
             this.txtPrezzo.Location = new System.Drawing.Point(553, 120);
             this.txtPrezzo.Name = "txtPrezzo";
             this.txtPrezzo.Size = new System.Drawing.Size(111, 20);
-            this.txtPrezzo.TabIndex = 61;
+            this.txtPrezzo.TabIndex = 16;
             this.txtPrezzo.TextChanged += new System.EventHandler(this.txtPrezzo_TextChanged);
             // 
             // txtTarga
@@ -431,7 +425,7 @@
             this.txtTarga.Location = new System.Drawing.Point(57, 148);
             this.txtTarga.Name = "txtTarga";
             this.txtTarga.Size = new System.Drawing.Size(111, 20);
-            this.txtTarga.TabIndex = 63;
+            this.txtTarga.TabIndex = 17;
             // 
             // label9
             // 
@@ -439,14 +433,38 @@
             this.label9.Location = new System.Drawing.Point(9, 151);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(38, 13);
-            this.label9.TabIndex = 62;
+            this.label9.TabIndex = 0;
             this.label9.Text = "Targa:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(187, 151);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(359, 13);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "La targa deve rispettare le regole comunemente in uso sulle targhe italiane.";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(187, 164);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(275, 13);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Per applicare una targa di default lasciare libero il campo.";
+            // 
+            // ofdImg
+            // 
+            this.ofdImg.FileName = "openFileDialog1";
             // 
             // AddNewVeicolo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(676, 205);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.txtTarga);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txtPrezzo);
@@ -476,8 +494,10 @@
             this.Controls.Add(this.txtMarca);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbTipoVeicolo);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AddNewVeicolo";
-            this.Text = "AddNewVeicolo";
+            this.Text = "Autosalone Nico - Aggiungi veicolo";
+            this.Load += new System.EventHandler(this.AddNewVeicolo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numKmPercorsi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAirbag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPotenza)).EndInit();
@@ -526,5 +546,8 @@
         private System.Windows.Forms.TextBox txtPrezzo;
         private System.Windows.Forms.TextBox txtTarga;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.OpenFileDialog ofdImg;
     }
 }

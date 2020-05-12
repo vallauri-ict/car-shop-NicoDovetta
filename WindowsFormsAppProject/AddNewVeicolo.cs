@@ -14,17 +14,21 @@ namespace WindowsFormsAppProject
 {
     public partial class AddNewVeicolo : Form
     {
-        private static string imgDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\img";//Percorso della cartella "resources".
-        private static string noImgPath = Path.Combine(imgDirectoryPath, Properties.Resources.NO_Img);//Percorso del file contenente il database.
+		#region globalVariables
 
-        private SerialBindList<Veicolo> listaVeicoli;//Riferimento alla lista "vera", contenente tutti i veicoli
-        private KnownColor color = KnownColor.Black;//colore del veicolo scelto dall'utente
-        private string imgPath = noImgPath;
+		private static string imgDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\img";//Percorso della cartella "resources".
+        private static string noImgPath = Path.Combine(imgDirectoryPath, Properties.Resources.NO_Img);//Percorso dell'immagine di default.
 
-        /// <summary>
-        /// Costruttore vuoto
-        /// </summary>
-        public AddNewVeicolo()
+        private SerialBindList<Veicolo> listaVeicoli;//Riferimento alla lista "vera", contenente tutti i veicoli.
+        private static string color = "Black";//Colore del veicolo scelto dall'utente.
+        private string imgPath = noImgPath;//Immagine di default.
+
+		#endregion globalVariables
+
+		/// <summary>
+		/// Costruttore vuoto.
+		/// </summary>
+		public AddNewVeicolo()
         {
             InitializeComponent();
             provaBackground.BorderStyle = BorderStyle.None;
@@ -35,7 +39,7 @@ namespace WindowsFormsAppProject
         /// Crea un riferimento alla lista con tutti i veicoli,
         /// imposta a none il valore del bordo della textbox di pre-view a none in maniera
         /// da renderla presente ma non visibile fino a quando non si sceglie un colore,
-        /// autoseleziona come veicolo una moto
+        /// autoseleziona come veicolo una moto.
         /// </summary>
         /// <param name="listaVeicoli">Riferimento alla lista contenente tutti i dati ed i veicoli</param>
         public AddNewVeicolo(SerialBindList<Veicolo> listaVeicoli)
@@ -47,19 +51,29 @@ namespace WindowsFormsAppProject
         }
 
         /// <summary>
+        /// Evento generato automaticamente dalla form prima di essere totalmente caricata nella quale vado a impostare come massima data per l'immatricolazione la data attuale.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddNewVeicolo_Load(object sender, EventArgs e)
+        {
+            dtpImmatricolazione.MaxDate = DateTime.Today;
+        }
+
+        /// <summary>
         /// Al premere del bottone colore avvia una dialog form e fa scegliere il colore all'utente;
-        /// successivamente salca il colore scelto e lo imposta come colore di sfondo della textBox di pre-view
+        /// successivamente salca il colore scelto e lo imposta come colore di sfondo della textBox di pre-view.
         /// </summary>
         private void btnColore_Click(object sender, EventArgs e)
         {
             ColorDialog c = new ColorDialog();
             c.ShowDialog();
-            color = (c.Color).ToKnownColor();
+            color = c.Color.ToKnownColor().ToString();
             provaBackground.BackColor = c.Color;//Imposta lo sfondo di una textBox al colore selezionato, da intendersi come "pre-view"
         }
 
         /// <summary>
-        /// A seconda del checked su nuova viene abilitato/disabilitato il groupBox per il Km0
+        /// A seconda del checked su nuova viene abilitato/disabilitato il groupBox per il Km0.
         /// </summary>
         private void rdbNoNuova_CheckedChanged(object sender, EventArgs e)
         {
@@ -67,7 +81,7 @@ namespace WindowsFormsAppProject
         }
 
         /// <summary>
-        /// Ogni volta che l'indice della combobox di scelta del veicolo cambia aggiorna la form per aggiungere o togliere i campi specifici di uno o dell'altro
+        /// Ogni volta che l'indice della combobox di scelta del veicolo cambia aggiorna la form per aggiungere o togliere i campi specifici di uno o dell'altro.
         /// </summary>
         private void cmbTipoVeicolo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -84,7 +98,7 @@ namespace WindowsFormsAppProject
         }
 
         /// <summary>
-        /// Sul click del btn annulla chiudo la form
+        /// Sul click del btn annulla chiudo la form.
         /// </summary>
         private void btnAnnulla_Click(object sender, EventArgs e)
         {
@@ -92,7 +106,7 @@ namespace WindowsFormsAppProject
         }
 
         /// <summary>
-        /// Dopo aver agginto il veicolo, evitando errori chiudo la form
+        /// Dopo aver agginto il veicolo, evitando errori chiudo la form.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -101,13 +115,20 @@ namespace WindowsFormsAppProject
             string targa = txtTarga.Text;
             if (Utils.checkTarga(ref targa, listaVeicoli))
             {
-                if (cmbTipoVeicolo.SelectedIndex == 0)
+                try
                 {
-                    listaVeicoli.Add(new Moto(targa, txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToDouble(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text, Convert.ToDouble(txtPrezzo.Text), imgPath));
+                    if (cmbTipoVeicolo.SelectedIndex == 0)
+                    {
+                        listaVeicoli.Add(new Moto(targa, txtMarca.Text, txtModello.Text, color, Convert.ToDouble(numCilindrata.Value), Convert.ToDouble(numPotenza.Value), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), txtMarcaSella.Text, Convert.ToDouble(txtPrezzo.Text), imgPath));
+                    }
+                    else
+                    {
+                        listaVeicoli.Add(new Automobili(targa, txtMarca.Text, txtModello.Text, color, Convert.ToDouble(numCilindrata.Value), Convert.ToDouble(numPotenza.Value), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), Convert.ToInt32(numAirbag.Value), Convert.ToDouble(txtPrezzo.Text), imgPath));
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    listaVeicoli.Add(new Automobili(targa, txtMarca.Text, txtModello.Text, color.ToString(), Convert.ToDouble(numCilindrata.Value), Convert.ToDouble(numPotenza), dtpImmatricolazione.Value, rdbSiNuova.Checked, rdbSiKm0.Checked, Convert.ToInt32(numKmPercorsi.Value), Convert.ToInt32(numAirbag.Value), Convert.ToDouble(txtPrezzo.Text), imgPath));
+                    MessageBox.Show("Impossibile inserire il veicolo.", "Autosalone Nico");
                 }
                 Close();
             }
@@ -118,22 +139,39 @@ namespace WindowsFormsAppProject
         }
 
         /// <summary>
-        /// Apre una file dialog che permette di scegliere l'immagine
+        /// Apre una file dialog che permette di scegliere l'immagine.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnImmagine_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.ShowDialog();
-            imgPath = ofd.FileName;
-            if (!imgPath.Contains(".png") || !imgPath.Contains(".jpg") || !imgPath.Contains(".jpeg"))
+            ofdImg.ShowDialog();
+            string img = ofdImg.FileName;
+            try
             {
-                MessageBox.Show("Estensioni accettate .png, .jpg, .jpeg.", "Autosalone Nico");
-                imgPath = @".\img/noPhoto.jpg";
+                if (img.Substring(img.LastIndexOf('.')) == ".png" || img.Substring(img.LastIndexOf('.')) == ".jpg" || img.Substring(img.LastIndexOf('.')) == ".jpeg")
+                {
+                    if (File.Exists(img))
+                    {
+                        imgPath = img;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Formati accettati '.png' '.jpg' '.jpeg'", "Autosalone Nico");
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Il colore è impostato a quello di default.", "Autosalone Nico");
             }
         }
 
+        /// <summary>
+        /// Controlla che il prezzo sia un numero.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtPrezzo_TextChanged(object sender, EventArgs e)
         {
             double _;
