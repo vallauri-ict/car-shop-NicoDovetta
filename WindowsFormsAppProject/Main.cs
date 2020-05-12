@@ -15,17 +15,21 @@ namespace WindowsFormsAppProject
 {
     public partial class Main : Form
     {
-        #region dbPathSetting
+        #region resourcePathSetting
 
-        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";//Percorso della cartella "resources".
+        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi";//Percorso della cartella "resources".
         private static string DbPath = Path.Combine(resourcesDirectoryPath, Properties.Resources.DB_Name);//Percorso del file contenente il database.
         private static string connStr = $"Provider=Microsoft.Ace.Oledb.12.0;Data Source={DbPath};";//Stringa di connessione completa al database access.
+        private static string backupDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi\\Backup";//Percorso della cartella "resources".
+        private static string jsonSave = Path.Combine(backupDirectoryPath, Properties.Resources.JSON_Save);//Percorso del file contenente il dsalvataggio in formato json.
+        private static string imgDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\img";//Percorso della cartella "resources".
+        private static string noImgPath = Path.Combine(imgDirectoryPath, Properties.Resources.NO_Img);//Percorso del file contenente il database.
 
-        #endregion dbPathSetting
+        #endregion resourcePathSetting
 
         #region globalVariables
 
-        UtilsDb dbManager;//Evita che 2 o più persone modifichino contemporaneamente il database.
+        UtilsDb dbManagement;//Evita che 2 o più persone modifichino contemporaneamente il database.
         SerialBindList<Veicolo> listaVeicoli = new SerialBindList<Veicolo>();//Contiene la lista dei veicoli.
 
         #endregion globalVariables
@@ -44,17 +48,22 @@ namespace WindowsFormsAppProject
         {
             if (File.Exists(DbPath))
             {
-                dbManager = new UtilsDb(connStr);
-                dbManager.GetVeicolList(ref listaVeicoli);
+                dbManagement = new UtilsDb(connStr);
+                if (dbManagement.PresTabella("Automobili"))
+                {
+                    dbManagement.GetVeicolListAuto(ref listaVeicoli);
+                }
+                if (dbManagement.PresTabella("Moto"))
+                {
+                    dbManagement.GetVeicolListAuto(ref listaVeicoli);
+                }
+                cmbVisual.SelectedIndex = 0;
+                Utils.visualNew(dgvVisual, listaVeicoli, cmbVisual.SelectedIndex);
             }
             else
             {
                 MessageBox.Show("Impossibile trovare il database. Contattare l'amministratore.", "Autosalone Nico");
-            }
-            if (listaVeicoli.Count < 0)
-            {
                 Utils.loadData(listaVeicoli);
-                Utils.visualNew(this, listaVeicoli);
             }
         }
 
@@ -74,7 +83,7 @@ namespace WindowsFormsAppProject
         /// </summary>
         private void SalvaTSB_Click(object sender, EventArgs e)
         {
-            Utils.serializeToJson(listaVeicoli, @".\Veicoli.json");
+            Utils.serializeToJson(listaVeicoli, jsonSave);
         }
 
         /// <summary>
@@ -82,7 +91,7 @@ namespace WindowsFormsAppProject
         /// </summary>
         private void ApriTSB_Click(object sender, EventArgs e)
         {
-            Utils.parseJsonToObject(@".\Veicoli.json", listaVeicoli);
+            Utils.parseJsonToObject(jsonSave, listaVeicoli);
         }
 
         /// <summary>
@@ -108,7 +117,12 @@ namespace WindowsFormsAppProject
         /// </summary>
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Utils.serializeToJson(listaVeicoli, @".\Veicoli.json");
+            Utils.serializeToJson(listaVeicoli, jsonSave);
+        }
+
+        private void cmbVisual_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Utils.visualNew(dgvVisual, listaVeicoli, cmbVisual.SelectedIndex);
         }
     }
 }

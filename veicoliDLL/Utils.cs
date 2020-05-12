@@ -23,8 +23,10 @@ namespace veicoliDLLProject
     {
         #region pathVariables
 
-        private static string resourcesDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources";//Percorso della cartella "resources".
-        private static string jsonSave = Path.Combine(resourcesDirectoryPath, Properties.Resources.JSON_Save);//Percorso del file contenente il dsalvataggio in formato json.
+        private static string backupDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\salvataggi\\Backup";//Percorso della cartella "resources".
+        private static string jsonSave = Path.Combine(backupDirectoryPath, Properties.Resources.JSON_Save);//Percorso del file contenente il dsalvataggio in formato json.
+        private static string imgDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\img";//Percorso della cartella "resources".
+        private static string noImgPath = Path.Combine(imgDirectoryPath, Properties.Resources.NO_Img);//Percorso del file contenente il database.
 
         #endregion pathVariables
 
@@ -50,11 +52,19 @@ namespace veicoliDLLProject
         {
             if (File.Exists(jsonSave))
             {
-                apriSalvataggi(listaVeicoli, jsonSave);
+                DialogResult result = MessageBox.Show("Nessun dato all'interno del database. Caricare salvataggio di backup?", "Autosalone Nico", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        apriSalvataggi(listaVeicoli, jsonSave);
+                        break;
+                    default:
+                        break;
+                }
             }
             else
             {
-                DialogResult result = MessageBox.Show("Carcare dati di test?", "Autosalone Vallauti", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show("Carcare dati di test?", "Autosalone Nico", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (result)
                 {
                     case DialogResult.Cancel:
@@ -135,35 +145,90 @@ namespace veicoliDLLProject
         }
 
         /// <summary>
-        /// Richiamato al caricamento della form si occupa di mostrare a video i veicoli presenti nella lista.
+        /// Richiamato tutte le volte che devo cambiare i veicoli all'interno della dgv.
         /// </summary>
-        /// <param name="lstVeicoli">Lista che contiene i veicoli.</param>
-        public static void visualNew(Form f, BindingList<Veicolo> lstVeicoli)
+        /// <param name="dgv">Elemento della form dove carico i dati.</param>
+        /// <param name="listaVeicoli">Lista che contiene i veicoli.</param>
+        /// <param name="visual">Campo che mi indica quale tipo di veicolo devo inserire nella form.</param>
+        public static void visualNew(DataGridView dgv, SerialBindList<Veicolo> listaVeicoli, int visual)
         {
-            orderListbyImmatricolazione(lstVeicoli);
+            settaDgv(dgv, visual);
+            foreach (Veicolo item in listaVeicoli)
+            {
+                if (visual == 0)
+                {
+                    if (item is Automobili)
+                    {
+                        dgv.Rows.Add();
+                        dgv.Rows[dgv.RowCount - 1].Cells[0].Value = item.Targa;
+                        dgv.Rows[dgv.RowCount - 1].Cells[1].Value = item.Marca;
+                        dgv.Rows[dgv.RowCount - 1].Cells[2].Value = item.Modello;
+                        dgv.Rows[dgv.RowCount - 1].Cells[3].Value = item.Colore;
+                        dgv.Rows[dgv.RowCount - 1].Cells[4].Value = item.Cilindrata.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[5].Value = item.PotenzaKw.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[6].Value = item.Immatricolazione.ToString("####/##/##");
+                        dgv.Rows[dgv.RowCount - 1].Cells[7].Value = (item.IsUsato ? "Sì" : "No");
+                        dgv.Rows[dgv.RowCount - 1].Cells[8].Value = (item.IsKmZero ? "Sì" : "No");
+                        dgv.Rows[dgv.RowCount - 1].Cells[9].Value = item.KmPercorsi.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[10].Value = (item as Automobili).NumAirbag.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[11].Value = $"€ {item.Prezzo.ToString()}";
+                    }
+                }
+                else
+                {
+                    if (item is Moto)
+                    {
+                        dgv.Rows.Add();
+                        dgv.Rows[dgv.RowCount - 1].Cells[0].Value = item.Targa;
+                        dgv.Rows[dgv.RowCount - 1].Cells[1].Value = item.Marca;
+                        dgv.Rows[dgv.RowCount - 1].Cells[2].Value = item.Modello;
+                        dgv.Rows[dgv.RowCount - 1].Cells[3].Value = item.Colore;
+                        dgv.Rows[dgv.RowCount - 1].Cells[4].Value = item.Cilindrata.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[5].Value = item.PotenzaKw.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[6].Value = item.Immatricolazione.ToString("####/##/##");
+                        dgv.Rows[dgv.RowCount - 1].Cells[7].Value = (item.IsUsato ? "Sì" : "No");
+                        dgv.Rows[dgv.RowCount - 1].Cells[8].Value = (item.IsKmZero ? "Sì" : "No");
+                        dgv.Rows[dgv.RowCount - 1].Cells[9].Value = item.KmPercorsi.ToString();
+                        dgv.Rows[dgv.RowCount - 1].Cells[10].Value = (item as Moto).MarcaSella;
+                        dgv.Rows[dgv.RowCount - 1].Cells[11].Value = $"€ {item.Prezzo.ToString()}";
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Ordina la lista in base alla data di immatricolazione.
+        /// Imposta l'intestazione delle colonne per la visualizzazione dei dati.
         /// </summary>
-        /// <param name="lstVeicoli">Lista da ordinare.</param>
-        private static void orderListbyImmatricolazione(BindingList<Veicolo> lstVeicoli)
+        /// <param name="dgv">Elemento della form dove carico i dati.</param>
+        /// <param name="visual">Campo che mi indica quali veicoli devo caricare.</param>
+        private static void settaDgv(DataGridView dgv, int visual)
         {
-            for (int i = 0; i < lstVeicoli.Count; i++)
+            dgv.ColumnCount = 12;
+            dgv.Columns[0].HeaderText = "Targa";
+            dgv.Columns[1].HeaderText = "Marca";
+            dgv.Columns[2].HeaderText = "Modello";
+            dgv.Columns[3].HeaderText = "Colore";
+            dgv.Columns[4].HeaderText = "Cilindrata";
+            dgv.Columns[5].HeaderText = "Potenza";
+            dgv.Columns[6].HeaderText = "Immatricolazione";
+            dgv.Columns[7].HeaderText = "Usato?";
+            dgv.Columns[8].HeaderText = "Km Zero?";
+            dgv.Columns[9].HeaderText = "Km Percorsi";
+            if (visual == 0)
             {
-                int posmin = i;
-                for (int j = i + 1; j < lstVeicoli.Count; j++)
-                {
-                    if (lstVeicoli[posmin].Immatricolazione < lstVeicoli[j].Immatricolazione)
-                    {
-                        posmin = j;
-                    }
-                }
-                if (posmin != i)
-                {
-                    
-                }
+                dgv.Columns[10].HeaderText = "Numero Airbag";
             }
+            else
+            {
+                dgv.Columns[10].HeaderText = "Marca sella";
+            }
+            dgv.Columns[11].HeaderText = "Prezzo";
+            dgv.RowHeadersVisible = false;
+            dgv.AutoResizeColumns();
+            dgv.AutoResizeRows();
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.MultiSelect = false;
+            dgv.ClearSelection();
         }
 
         /// <summary>
@@ -197,8 +262,8 @@ namespace veicoliDLLProject
         public static void createHtml(BindingList<Veicolo> listaVeicoli, string pathName, string skeletonPathName = @".\www\pagine\index-skeleton.html")
         {
             string html = File.ReadAllText(skeletonPathName), nuovo = "", usato = "";
-            html = html.Replace("({head-title})", "AUTOVALLAURI");
-            html = html.Replace("({body-title})", "SALONE AUTOVALLAURI - VEICOLI NUOVI E USATI");
+            html = html.Replace("({head-title})", "AUTOSALONE NICO");
+            html = html.Replace("({body-title})", "AUTOSALONE NICO - VEICOLI NUOVI E USATI");
             html = html.Replace("({body-subtitle})", "Le migliori occasioni al miglior prezzo");
             foreach (Veicolo item in listaVeicoli)
             {

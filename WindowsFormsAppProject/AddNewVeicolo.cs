@@ -1,6 +1,7 @@
 ﻿#region Riferimenti
 //Interni
 using System;
+using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 using veicoliDLLProject;
@@ -13,9 +14,12 @@ namespace WindowsFormsAppProject
 {
     public partial class AddNewVeicolo : Form
     {
+        private static string imgDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\img";//Percorso della cartella "resources".
+        private static string noImgPath = Path.Combine(imgDirectoryPath, Properties.Resources.NO_Img);//Percorso del file contenente il database.
+
         private SerialBindList<Veicolo> listaVeicoli;//Riferimento alla lista "vera", contenente tutti i veicoli
         private KnownColor color = KnownColor.Black;//colore del veicolo scelto dall'utente
-        private string imgPath = @".\img/noPhoto.jpg";
+        
 
         /// <summary>
         /// Costruttore vuoto

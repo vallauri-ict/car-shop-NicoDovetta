@@ -121,4 +121,12 @@
     <value>autoSalone.accdb</value>
     <comment>Nome del database che contiene i dati dei veicoli.</comment>
   </data>
+  <data name="JSON_Save" xml:space="preserve">
+    <value>Veicoli.json</value>
+    <comment>Salvataggio di backup nel caso non si trovasse il database.</comment>
+  </data>
+  <data name="NO_Img" xml:space="preserve">
+    <value>noPhoto.jpg</value>
+    <comment>Nel caso non ci sia l'immagine mette quella base.</comment>
+  </data>
 </root>

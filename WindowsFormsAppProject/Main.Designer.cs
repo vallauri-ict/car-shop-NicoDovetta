@@ -35,9 +35,11 @@
             this.apriTSB = new System.Windows.Forms.ToolStripButton();
             this.stampaHtmlTSB = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.cmbVisual = new System.Windows.Forms.ComboBox();
+            this.dgvVisual = new System.Windows.Forms.DataGridView();
             this.toolStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVisual)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -50,7 +52,7 @@
             this.toolStripSeparator});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip.Size = new System.Drawing.Size(913, 25);
             this.toolStrip.TabIndex = 2;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -99,21 +101,37 @@
             this.toolStripSeparator.Name = "toolStripSeparator";
             this.toolStripSeparator.Size = new System.Drawing.Size(6, 25);
             // 
-            // pictureBox1
+            // cmbVisual
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 28);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            this.cmbVisual.FormattingEnabled = true;
+            this.cmbVisual.Items.AddRange(new object[] {
+            "Automobili",
+            "Moto"});
+            this.cmbVisual.Location = new System.Drawing.Point(12, 28);
+            this.cmbVisual.Name = "cmbVisual";
+            this.cmbVisual.Size = new System.Drawing.Size(164, 21);
+            this.cmbVisual.TabIndex = 3;
+            this.cmbVisual.SelectedIndexChanged += new System.EventHandler(this.cmbVisual_SelectedIndexChanged);
+            // 
+            // dgvVisual
+            // 
+            this.dgvVisual.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.dgvVisual.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvVisual.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVisual.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dgvVisual.Location = new System.Drawing.Point(0, 62);
+            this.dgvVisual.Name = "dgvVisual";
+            this.dgvVisual.ReadOnly = true;
+            this.dgvVisual.Size = new System.Drawing.Size(913, 424);
+            this.dgvVisual.TabIndex = 4;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(913, 486);
+            this.Controls.Add(this.dgvVisual);
+            this.Controls.Add(this.cmbVisual);
             this.Controls.Add(this.toolStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
@@ -122,7 +140,7 @@
             this.Load += new System.EventHandler(this.Main_Load);
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVisual)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,7 +154,9 @@
         private System.Windows.Forms.ToolStripButton apriTSB;
         private System.Windows.Forms.ToolStripButton stampaHtmlTSB;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.ComboBox cmbVisual;
+        private System.Windows.Forms.DataGridView dgvVisual;
     }
 }
 

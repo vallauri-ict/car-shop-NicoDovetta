@@ -68,5 +68,14 @@ namespace veicoliDLLProject.Properties {
                 return ResourceManager.GetString("JSON_Save", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a noPhoto.jpg.
+        /// </summary>
+        internal static string NO_Img {
+            get {
+                return ResourceManager.GetString("NO_Img", resourceCulture);
+            }
+        }
     }
 }

@@ -121,4 +121,8 @@
     <value>Veicoli.json</value>
     <comment>In caso non si trovasse il database potrebbe ancora esserci il salvataggio in ".json".</comment>
   </data>
+  <data name="NO_Img" xml:space="preserve">
+    <value>noPhoto.jpg</value>
+    <comment>Nel caso non ci fosse la foto.</comment>
+  </data>
 </root>
