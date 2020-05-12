@@ -10,6 +10,10 @@ using System.Windows.Forms;
 //Esterni
 //Per la conversione in json e viceversa
 using Newtonsoft.Json;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 #endregion Riferimenti
 
@@ -125,7 +129,7 @@ namespace veicoliDLLProject
         /// <param name="pathName">Indirizzo di destinazione del file ".json".</param>
         public static void serializeToJson<T>(IEnumerable<T> objectlist, string pathName)
         {
-            string json = JsonConvert.SerializeObject(objectlist, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(objectlist, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(pathName, json);
         }
 
@@ -280,16 +284,96 @@ namespace veicoliDLLProject
             }
         }
 
-		#endregion controlloTarga
+        #endregion controlloTarga
 
-		/// <summary>
-		/// Crea e avvia, con il browser predefinito, una pagina HTML con tutti i veicoli e alcune variabili; pronto per l'esportazione.
-		/// </summary>
-		/// <param name="listaVeicoli">Source dei veicoli</param>
-		/// <param name="pathName">Path destinazione di "index.html"</param>
-		/// <param name="skeletonPathName">Path del modello html</param>
-		public static void createHtml(BindingList<Veicolo> listaVeicoli, string pathName)
+        /// <summary>
+        /// Ci restirtuisce il percorso dove si vuole salvare il documento.
+        /// </summary>
+        /// <param name="fbd">Oggetto dei windows form che si occupa di trovare il path.</param>
+        /// <returns>Ritorna il path dove vogliamo che sia salvato il documento</returns>
+        public static string SelectPath(FolderBrowserDialog fbd)
         {
+            string path = string.Empty;
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+                path = fbd.SelectedPath;
+
+            return path;
+        }
+
+        /// <summary>
+        /// Combina il nome e il path del file, in maniera che si possa salvare.
+        /// </summary>
+        /// <param name="OutputFileDirectory">Directory preferenziale dove salvare il file.</param>
+        /// <param name="fileExtension">Estensione del file.</param>
+        /// <returns>Restituisce la directory dove si salva il file</returns>
+        public static string OutputFileName(string OutputFileDirectory, string fileExtension)
+        {
+            var datetime = DateTime.Now.ToString().Replace("/", "_").Replace(":", "_");
+
+            string fileFullname = Path.Combine(OutputFileDirectory, $"Fattura.{fileExtension}");
+
+            if (File.Exists(fileFullname))
+                fileFullname = Path.Combine(OutputFileDirectory, $"Fattura{datetime}.{fileExtension}");
+
+            return fileFullname;
+        }
+
+        /// <summary>
+        /// Genera un messaggio e poi avvia un documento o un'altro tipo di file.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="filepath"></param>
+        public static void ProcedureCompleted(string msg, string filepath)
+        {
+            MessageBox.Show(msg, "Autosalone Nico");
+            System.Diagnostics.Process.Start(filepath);
+        }
+
+        /// <summary>
+        /// Aggiunge il testo al paragrafo.
+        /// </summary>
+        /// <param name="mainPart">Parte principale del documento.</param>
+        /// <returns>Il paragrado con testo e stili.</returns>
+        public static Paragraph WordPotentialTest(MainDocumentPart mainPart)
+        {
+            Paragraph p = WordUtilities.CreateParagraphWithStyle("Titolo1", JustificationValues.Center);
+
+            WordUtilities.AddTextToParagraph(p, "Pellentesque ", SpaceProcessingModeValues.Preserve);
+
+            RunProperties rpr = WordUtilities.AddStyle(mainPart, true, false, false, true);
+            WordUtilities.AddTextToParagraph(p, "commodo ", SpaceProcessingModeValues.Preserve, rpr);
+
+            WordUtilities.AddTextToParagraph(p, "rhoncus ", SpaceProcessingModeValues.Preserve);
+
+            rpr = WordUtilities.AddStyle(mainPart, false, true, false, true);
+            WordUtilities.AddTextToParagraph(p, "mauris ", SpaceProcessingModeValues.Preserve, rpr);
+
+
+            rpr = WordUtilities.AddStyle(mainPart, true, true, true, true, "00", "Default", "Calibri", 12, "000000", UnderlineValues.WavyDouble);
+            WordUtilities.AddTextToParagraph(p, "amet ", SpaceProcessingModeValues.Preserve, rpr);
+
+            WordUtilities.AddTextToParagraph(p, "faucibus arcu ", SpaceProcessingModeValues.Preserve);
+
+            rpr = WordUtilities.AddStyle(mainPart, false, false, false, true, "00", "Default", "Calibri", 12, "FF0000");
+            WordUtilities.AddTextToParagraph(p, "porttitor ", SpaceProcessingModeValues.Preserve, rpr);
+
+            WordUtilities.AddTextToParagraph(p, "pharetra. Maecenas quis erat quis eros iaculis placerat ut at mauris. ", SpaceProcessingModeValues.Preserve);
+
+            return p;
+        }
+
+        /// <summary>
+        /// Crea e avvia, con il browser predefinito, una pagina HTML con tutti i veicoli e alcune variabili; pronto per l'esportazione.
+        /// </summary>
+        /// <param name="listaVeicoli">Source dei veicoli</param>
+        /// <param name="pathName">Path destinazione di "index.html"</param>
+        /// <param name="skeletonPathName">Path del modello html</param>
+        public static void createHtml(BindingList<Veicolo> listaVeicoli, string pathName)
+        {
+            string sitoDirectoryPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\\resources\\www";
+            string indexPath = Path.Combine(sitoDirectoryPath, Properties.Resources.Sito);
+            File.Copy(pathName, indexPath, true);
             string html = File.ReadAllText(pathName), nuovo = "", usato = "";
             html = html.Replace("({head-title})", "AUTOSALONE NICO");
             html = html.Replace("({body-title})", "AUTOSALONE NICO - VEICOLI NUOVI E USATI");
@@ -298,11 +382,17 @@ namespace veicoliDLLProject
             {
                 if (!item.IsUsato)
                 {
-                    nuovo += $"<div style='background-image:url({item.ImgPath});'></div>";
+                    nuovo += $"<div><img src='img/noPhoto.jpg' class='rounded'/>Marca: {item.Marca}, Modello: {item.Modello}, NUOVO al przzo di soli: €{item.Prezzo}</div><br>";
+                }
+                else
+                {
+                    usato += $"<div><img src='img/noPhoto.jpg' class='rounded'/>Marca: {item.Marca}, Modello: {item.Modello}, USATO al prezzo di soli €{item.Prezzo}</div><br>";
                 }
             }
-            html = html.Replace("c#_automatic_substitution;", (nuovo + usato));
-            File.WriteAllText(pathName, html);
+            html = html.Replace("nuovo", nuovo);
+            html = html.Replace("usato", usato);
+            File.WriteAllText(indexPath, html);
+            System.Diagnostics.Process.Start(indexPath);
         }
     }
 }

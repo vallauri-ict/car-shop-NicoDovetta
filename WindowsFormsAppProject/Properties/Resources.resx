@@ -130,7 +130,7 @@
     <comment>Nel caso non ci sia l'immagine mette quella base.</comment>
   </data>
   <data name="Sito" xml:space="preserve">
-    <value>index.html</value>
-    <comment>Pagina principale del sito.</comment>
+    <value>index-skeleton.html</value>
+    <comment>Pagina "base" del sito.</comment>
   </data>
 </root>
