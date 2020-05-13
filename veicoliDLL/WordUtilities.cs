@@ -19,6 +19,11 @@ namespace veicoliDLLProject
 {
 	public class WordUtilities
 	{
+        /// <summary>
+        /// Inserisce l'immagine nel documento.
+        /// </summary>
+        /// <param name="wordprocessingDocument">Documento a cui appendere l'immagine.</param>
+        /// <param name="fileName">Path dell'immagine.</param>
         public static void InsertPicture(WordprocessingDocument wordprocessingDocument, string fileName)
         {
             MainDocumentPart mainPart = wordprocessingDocument.MainDocumentPart;
@@ -30,6 +35,11 @@ namespace veicoliDLLProject
             AddImageToBody(wordprocessingDocument, mainPart.GetIdOfPart(imagePart));
         }
 
+        /// <summary>
+        /// Inserisce l'immagine nel documento.
+        /// </summary>
+        /// <param name="wordprocessingDocument">Documento a cui appendere l'immagine.</param>
+        /// <param name="fileName">Path dell'immagine.</param>
         private static void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId)
         {
             // Define the reference of the image.
@@ -100,9 +110,14 @@ namespace veicoliDLLProject
             wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
         }
 
+
+        /// <summary>
+        /// Aggiunge gli stili.
+        /// </summary>
+        /// <param>Definisce tutt e le caratteristiche dello stile.</param>
+        /// <returns>Lo stile.</returns>
         public static RunProperties AddStyle(MainDocumentPart mainPart, bool isBold = false, bool isItalic = false, bool isUnderline = false, bool isOnlyRun = false, string styleId = "00", string styleName = "Default", string fontName = "Calibri", int fontSize = 12, string rgbColor = "000000", UnderlineValues underline = UnderlineValues.Single)
         {
-            // we have to set the properties
             RunProperties rPr = new RunProperties();
             Color color = new Color() { Val = rgbColor };
             RunFonts rFont = new RunFonts();
@@ -119,9 +134,8 @@ namespace veicoliDLLProject
                 style.StyleId = styleId;
                 if (styleName == null || styleName.Length == 0) styleName = styleId;
                 style.Append(new Name() { Val = styleName });
-                style.Append(rPr); //we are adding properties previously defined
+                style.Append(rPr);
 
-                // we have to add style that we have created to the StylePart
                 StyleDefinitionsPart stylePart;
                 if (mainPart.StyleDefinitionsPart == null)
                 {
@@ -131,24 +145,33 @@ namespace veicoliDLLProject
                 else stylePart = mainPart.StyleDefinitionsPart;
 
                 stylePart.Styles.Append(style);
-                stylePart.Styles.Save(); // we save the style part
+                stylePart.Styles.Save();
             }
             return rPr;
         }
 
+        /// <summary>
+        /// Crea un paragrafo e lo aggiunge al documento.
+        /// </summary>
+        /// <param name="styleId"></param>
+        /// <param name="justification"></param>
+        /// <returns></returns>
         public static Paragraph CreateParagraphWithStyle(string styleId, JustificationValues justification = JustificationValues.Left)
         {
             Paragraph paragraph = new Paragraph();
-
             ParagraphProperties pp = new ParagraphProperties();
-            // we set the style
             pp.ParagraphStyleId = new ParagraphStyleId() { Val = styleId };
-            // we set the alignement
             pp.Justification = new Justification() { Val = justification };
             paragraph.Append(pp);
             return paragraph;
         }
 
+        /// <summary>
+        /// Aggiunge il testo al paragrafo.
+        /// </summary>
+        /// <param name="paragraph">Paragrafo a cui aggiungere il testo.</param>
+        /// <param name="content">Testo da aggiungere.</param>
+        /// <param name="rpr">Proprietà/Stile del testo</param>
         public static void AddTextToParagraph(Paragraph paragraph, string content, SpaceProcessingModeValues space = SpaceProcessingModeValues.Default, RunProperties rpr = null)
         {
             Run r = new Run();
@@ -159,6 +182,11 @@ namespace veicoliDLLProject
             paragraph.Append(r);
         }
 
+        /// <summary>
+        /// Crea una lista a pallini.
+        /// </summary>
+        /// <param name="mainPart">Documento dove si vuole appendere la lista.</param>
+        /// <param name="bulletChar">Carattere usato come tag per il nuovo elemento.</param>
         public static void CreateBulletNumberingPart(MainDocumentPart mainPart, string bulletChar = "-")
         {
             NumberingDefinitionsPart numberingPart =
@@ -180,6 +208,9 @@ namespace veicoliDLLProject
             element.Save(numberingPart);
         }
 
+        /// <summary>
+        /// Crea una lista ordinata.
+        /// </summary>
         public static void CreateBulletOrNumberedList(int indentLeft, int indentHanging, List<Paragraph> paragraphs, int numberOfParagraph, string[] texts, bool isBullet = true)
         {
             int numberingLevelReference, numberingId;
@@ -207,6 +238,9 @@ namespace veicoliDLLProject
                 InsertParagraphInList(paragraphs, ppUnordered, texts[i]);
         }
 
+        /// <summary>
+        /// Inserisce il testo alle varie righe della lista.
+        /// </summary>
         private static void InsertParagraphInList(List<Paragraph> paragraphs, ParagraphProperties ppUnordered, string text)
         {
             Paragraph p = new Paragraph();
@@ -215,6 +249,16 @@ namespace veicoliDLLProject
             paragraphs.Add(p);
         }
 
+        /// <summary>
+        /// Crea una tabella.
+        /// </summary>
+        /// <param name="mainPart">Documento.</param>
+        /// <param name="bolds" name="italics" name="underlines" name="texts" name="justifications"></param>
+        /// <param name="right">Numero di righe.</param>
+        /// <param name="cell">Numero di celle.</param>
+        /// <param name="rgbColor">Colore del testo.</param>
+        /// <param name="borderValues">Spessore dei bordi.</param>
+        /// <returns>Tabella appesa al documento.</returns>
         public static Table createTable(MainDocumentPart mainPart, bool[] bolds, bool[] italics, bool[] underlines, string[] texts, JustificationValues[] justifications, int right, int cell, string rgbColor = "000000", BorderValues borderValues = BorderValues.Thick)
         {
             if (bolds.Length == italics.Length && italics.Length == underlines.Length && underlines.Length == texts.Length)
@@ -249,6 +293,12 @@ namespace veicoliDLLProject
             return null;
         }
 
+        /// <summary>
+        /// Assega le prorpietà alla tabella.
+        /// </summary>
+        /// <param name="rgbColor">Colore del testo.</param>
+        /// <param name="borderValues">Proprietà dei bordi.</param>
+        /// <returns>Preprietà tabella.</returns>
         private static TableProperties getTableProperties(string rgbColor, BorderValues borderValues)
         {
             TableProperties tblProperties = new TableProperties();

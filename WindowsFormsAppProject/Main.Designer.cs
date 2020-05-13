@@ -121,6 +121,7 @@
 			this.rtbReport.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.rtbReport.Location = new System.Drawing.Point(8, 55);
 			this.rtbReport.Name = "rtbReport";
+			this.rtbReport.ReadOnly = true;
 			this.rtbReport.Size = new System.Drawing.Size(893, 407);
 			this.rtbReport.TabIndex = 6;
 			this.rtbReport.Text = "";
