@@ -58,6 +58,7 @@ namespace WindowsFormsAppProject
         private void AddNewVeicolo_Load(object sender, EventArgs e)
         {
             dtpImmatricolazione.MaxDate = DateTime.Today;
+            numKmPercorsi.Enabled = false;
         }
 
         /// <summary>
@@ -78,6 +79,7 @@ namespace WindowsFormsAppProject
         private void rdbNoNuova_CheckedChanged(object sender, EventArgs e)
         {
             grpKm0.Enabled = rdbNoNuova.Checked;
+            numKmPercorsi.Enabled = rdbNoNuova.Checked;
         }
 
         /// <summary>
@@ -178,6 +180,20 @@ namespace WindowsFormsAppProject
             if (!double.TryParse(txtPrezzo.Text, out _))
             {
                 MessageBox.Show("Il prezzo deve essere un numero.", "Autosalone Nico");
+            }
+        }
+
+        /// <summary>
+        /// Controlla il valore massimo del KmZero che non può avere più di 100 km.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void numKmPercorsi_ValueChanged(object sender, EventArgs e)
+        {
+            if (!rdbNoKm0.Checked && numKmPercorsi.Value > 100)
+            {
+                numKmPercorsi.Value = 0;
+                MessageBox.Show("Se è KmZero non può avere più di 100 km.", "Autosalone Nico");
             }
         }
     }
